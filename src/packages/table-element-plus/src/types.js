@@ -1,4 +1,4 @@
-import { uuid } from '@/components/utils/util';
+import { uuid } from '../../utils/util';
 
 export class TableCrud {
   add = {

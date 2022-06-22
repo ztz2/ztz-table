@@ -1,4 +1,4 @@
-import ZtzTable from './src/components/table-element-plus/src/index.vue';
+import ZtzTable from './src/packages/table-element-plus/src/index.vue';
 
 export { ZtzTable };
 export default {

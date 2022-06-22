@@ -1,0 +1,42 @@
+.DS_Store
+node_modules
+/dist
+
+
+# local env files
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# publish
+/public
+/tests
+.browserslistrc
+.editorconfig
+.eslintrc.js
+.gitignore
+babel.config.js
+jest.config.js
+jsconfig.json
+vue.config.js
+
+/src/api
+/src/router
+/src/store
+/src/views
+/src/App.vue
+/src/main.js

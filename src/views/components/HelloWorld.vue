@@ -37,7 +37,7 @@ import {
   addApi, deleteApi, editApi,
   pageApi,
 } from '@/api';
-import ZtzTable from '@/components/table-element-plus/src/index.vue';
+import ZtzTable from '@/packages/table-element-plus/src/index.vue';
 
 import AddForm from './AddForm.vue';
 

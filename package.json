@@ -1,7 +1,8 @@
 {
   "name": "ztz-table",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.3",
+  "description": "表格",
+  "license": "MIT",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -13,8 +14,8 @@
     "element-plus": "^2.2.6",
     "lodash": "^4.17.21",
     "vue": "^3.2.13",
-    "vue-router": "^4.0.3",
-    "vuex": "^4.0.0"
+    "vue-router": "^4.0.16",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
@@ -34,5 +35,6 @@
     "eslint-plugin-vue": "^8.0.3",
     "eslint-plugin-vuejs-accessibility": "^1.1.0",
     "jest": "^27.0.5"
-  }
+  },
+  "repository": "https://github.com/ztz2/ztz-table"
 }

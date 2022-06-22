@@ -41,38 +41,43 @@
       </div>
     </div>
   </div>
+
   <!-- 新增模态框 -->
-  <ElDialog
-    v-model="visibleAddDialogRef"
-    v-bind="currentCrudRef.add.dialogProps"
-  >
-    <div>
-      <component v-loading="loadingAddRef" :is="currentCrudRef.add.formComponent" ref="addFormRef" ></component>
-    </div>
-    <template #footer>
-      <ElButton @click="visibleAddDialogRef = false">取消</ElButton>
-      <ElButton :loading="loadingAddRef" @click="handleSubmit('add')" type="primary">确定</ElButton>
-    </template>
-  </ElDialog>
+  <template v-if="hasAddRef">
+    <ElDialog
+      v-model="visibleAddDialogRef"
+      v-bind="currentCrudRef.add.dialogProps"
+    >
+      <div>
+        <component v-loading="loadingAddRef" :is="currentCrudRef.add.formComponent" ref="addFormRef" ></component>
+      </div>
+      <template #footer>
+        <ElButton @click="visibleAddDialogRef = false">取消</ElButton>
+        <ElButton :loading="loadingAddRef" @click="handleSubmit('add')" type="primary">确定</ElButton>
+      </template>
+    </ElDialog>
+  </template>
 
   <!-- 编辑模态框 -->
-  <ElDialog
-    v-model="visibleEditDialogRef"
-    v-bind="currentCrudRef.edit.dialogProps"
-  >
-    <div>
-      <component
-        v-loading="loadingEditRef"
-        :data="editFormModelRef"
-        :is="currentCrudRef.edit.formComponent"
-        ref="editFormRef"
-      ></component>
-    </div>
-    <template #footer>
-      <ElButton @click="visibleEditDialogRef = false">取消</ElButton>
-      <ElButton :loading="loadingEditRef" @click="handleSubmit('edit')" type="primary">确定</ElButton>
-    </template>
-  </ElDialog>
+  <template v-if="hasEditRef">
+    <ElDialog
+      v-model="visibleEditDialogRef"
+      v-bind="currentCrudRef.edit.dialogProps"
+    >
+      <div>
+        <component
+          v-loading="loadingEditRef"
+          :data="editFormModelRef"
+          :is="currentCrudRef.edit.formComponent"
+          ref="editFormRef"
+        ></component>
+      </div>
+      <template #footer>
+        <ElButton @click="visibleEditDialogRef = false">取消</ElButton>
+        <ElButton :loading="loadingEditRef" @click="handleSubmit('edit')" type="primary">确定</ElButton>
+      </template>
+    </ElDialog>
+  </template>
 </template>
 
 <script setup>
@@ -106,12 +111,13 @@ import {
   checkType,
   getObjectValue,
   sortCurdVNodeBtn,
-} from '@/components/utils/util';
+} from '../../utils/util';
+
 import {
   TableCrud,
   TableRowOptions,
   PaginationDefaultProps,
-} from '@/components/table-element-plus/src/types';
+} from './types';
 
 const props = defineProps({
   columns: {
@@ -161,7 +167,7 @@ const queryParamsRef = ref({});
 const queryParamsBackupRef = ref({});
 const requestContentRef = ref({});
 
-// const hasAddRef = computed(() => !!currentCrudRef.value?.add?.api && !!currentCrudRef.value?.add?.formComponent);
+const hasAddRef = computed(() => !!currentCrudRef.value?.add?.api && !!currentCrudRef.value?.add?.formComponent);
 const hasEditRef = computed(() => !!currentCrudRef.value?.edit?.api && !!currentCrudRef.value?.edit?.formComponent);
 const hasDeleteRef = computed(() => !!currentCrudRef.value?.delete?.api);
 
