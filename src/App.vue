@@ -26,7 +26,7 @@
             <a-menu-item @click="$router.push('/start')" key="start" to="/start">快速开始</a-menu-item>
           </a-menu-item-group>
           <a-menu-item-group title="配置说明">
-            <a-menu-item @click="$router.push('/doc-element-plus')" key="doc-element-plus">介绍</a-menu-item>
+            <a-menu-item @click="$router.push('/doc-element-plus')" key="doc-element-plus">基于 element-plus 表格配置</a-menu-item>
           </a-menu-item-group>
         </a-menu>
       </div>
