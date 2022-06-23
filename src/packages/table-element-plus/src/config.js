@@ -50,6 +50,10 @@ export class TableCrud {
     crudSort: 30,
     // 【可选】 { string= } 删除二次确认提示文本
     confirmText: '确定要删除吗？',
+    // 【可选】 { string|null= } 操作成功提示消息，为null，则不提示
+    successMsg: '删除成功',
+    // 【可选】 { string|null= } 操作失败提示消息，为null，则不提示
+    errorMsg: null,
     // 【可选】 { Object= } 操作按钮的一些属性
     buttonProps: {
       type: 'danger',

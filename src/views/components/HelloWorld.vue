@@ -1,5 +1,8 @@
 <template>
   <div class="hello">
+    <Button>Default</Button>
+    <a-button type="primary">Primary Button</a-button>
+    <el-button>默认按钮</el-button>
     <button @click="ztzTableRef.showAddDialog()">新增</button>
     <button @click="visible=!visible">{{ visible ? '关闭' : '开启'}}</button>
     <button @click="handleAdd">添加表头</button>
@@ -34,6 +37,7 @@
 </template>
 
 <script setup>
+import { Button } from 'ant-design-vue';
 import { defineComponent, reactive, ref } from 'vue';
 import {
   addApi, deleteApi, editApi,
@@ -44,6 +48,7 @@ import ZtzTable from '@/packages/table-element-plus/src/index.vue';
 import AddForm from './AddForm.vue';
 
 defineComponent({
+  Button,
   ZtzTable,
 });
 const ztzTableRef = ref(null);

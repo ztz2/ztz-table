@@ -157,7 +157,7 @@ const props = defineProps({
     default: null,
   },
   // 表格数据Key
-  dataKey: {
+  listKey: {
     type: String,
     default: 'content',
   },
@@ -185,7 +185,7 @@ const paginationRef = ref(props.pagination);
 const paginationBackupRef = ref(props.pagination);
 const editFormModelRef = ref({});
 const queryParamsRef = ref({});
-const queryParamsBackupRef = ref({});
+const queryParamsBackupRef = ref(null);
 const requestContentRef = ref({});
 
 const hasAddComputed = computed(() => !!currentCrudRef.value?.add?.api && !!currentCrudRef.value?.add?.formComponent);
@@ -272,7 +272,7 @@ const createCrudBtn = function (config, ...args) {
 
 // 向表格中注入CRUD的功能
 const injectCurd2ColumnVNode = (columnVNodeList = []) => {
-  columnVNodeList.forEach((columnVNode) => {
+  columnVNodeList = columnVNodeList.map((columnVNode) => {
     const renderHeader = columnVNode?.children?.renderHeader ?? columnVNode?.children?.header;
     const renderDefault = columnVNode?.children?.render ?? columnVNode?.children?.default;
     const label = getLabel(columnVNode.props);
@@ -289,13 +289,21 @@ const injectCurd2ColumnVNode = (columnVNodeList = []) => {
     // 自定义渲染-body
     if (typeof renderDefault === 'function') {
       columnVNode.children.default = function (...argsList) {
+        let renderVNodeList = [];
         const renderVNode = renderDefault.apply(this, argsList);
-        [].push.apply(renderVNode, createCrudBtn.apply(this, [config, ...argsList]));
-        return sortCurdVNodeBtn(renderVNode);
+        if (renderVNode) {
+          if (Array.isArray(renderVNode)) {
+            renderVNodeList = renderVNode;
+          } else {
+            renderVNodeList = [renderVNode];
+          }
+        }
+        [].push.apply(renderVNodeList, createCrudBtn.apply(this, [config, ...argsList]));
+        return sortCurdVNodeBtn(renderVNodeList);
       };
     } else {
       // 重新创建虚拟节点，更新 ShapeFlags
-      h(columnVNode, {}, {
+      columnVNode = h(columnVNode, { key: String(Date.now()) }, {
         ...(checkType(columnVNode.children, 'Object') ? columnVNode.children : {}),
         ...{
           default(...argsList) {
@@ -309,13 +317,14 @@ const injectCurd2ColumnVNode = (columnVNodeList = []) => {
         },
       });
     }
+    return columnVNode;
   });
   return columnVNodeList;
 };
 
 // 搜索数据处理
 watchEffect(() => {
-  if (Object.keys(props.queryParams).length > 0) {
+  if (Object.keys(props.queryParams).length > 0 && queryParamsBackupRef.value == null) {
     queryParamsBackupRef.value = cloneDeep(props.queryParams);
   }
   queryParamsRef.value = props.queryParams;
@@ -419,8 +428,10 @@ const handleEdit = ({ row }) => {
       const params = { ...row };
       delete params._options;
       loadingEditEntityRef.value = true;
-      currentCrudRef.value.edit.detailApi(params).then((res) => {
-        if (editFormModelRef.value?._options?.uid === row._options.uid) {
+      currentCrudRef.value.edit.detailApi(params).then((res = {}) => {
+        res = checkType(res, 'Object') ? res : {};
+        console.log(123);
+        if (editFormModelRef.value?._options?.uid === row?._options?.uid) {
           res._options = row._options;
           editFormModelRef.value = res;
           loadingEditEntityRef.value = false;
@@ -438,7 +449,15 @@ const handleDelete = ({ row }) => {
   delete params._options;
   row._options.loadingDelete = true;
   currentCrudRef.value.delete.api(params).then(() => {
+    const msg = currentCrudRef.value.delete.successMsg;
     refreshTable();
+    if (msg) {
+      ElMessage({
+        showClose: true,
+        message: msg,
+        type: 'success',
+      });
+    }
   }).catch(() => {
     row._options.loadingDelete = false;
   });
@@ -453,7 +472,7 @@ const fetchTableData = () => {
     });
     loadingTableDataRef.value = true;
     props.data(params).then((res) => {
-      setTableData(get(res, props.dataKey));
+      setTableData(get(res, props.listKey));
       paginationRef.value.total = get(res, props.totalKey);
       requestContentRef.value = res;
     }).finally(() => {
@@ -474,8 +493,10 @@ const refreshTable = (options = { resetPageNum: false, resetQueryParams: false }
   if (options?.resetPageNum) {
     paginationRef.value.pageNum = paginationBackupRef.value.pageNum ?? 1;
   }
-  if (options?.resetQueryParams) {
-    queryParamsRef.value = cloneDeep(queryParamsBackupRef.value);
+  if (options?.resetQueryParams && queryParamsBackupRef.value) {
+    for (const [k, v] of Object.entries(queryParamsBackupRef.value)) {
+      queryParamsRef.value[k] = v;
+    }
   }
   fetchTableData();
 };

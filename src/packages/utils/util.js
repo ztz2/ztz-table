@@ -22,13 +22,13 @@ const paramCase = (value = '') => value.replace(/[A-Z]/, (s, i, str) => {
 // camel-case -> camelCase
 const camelCase = (value = '') => value.replace(/(-(.+?|$))/, (s) => s.charAt(1).toUpperCase());
 
-export const getObjectValue = (target, path) => {
+export const getObjectValue = (target, path = '') => {
   if (!path) {
     return undefined;
   }
-  const pathList = path.replace(/\[/gim, '.').replace(']', '').split('.').map((s) => [camelCase(s), paramCase(s)]);
   let res = target;
   try {
+    const pathList = path.replace(/\[/gim, '.').replace(']', '').split('.').map((s) => [camelCase(s), paramCase(s)]);
     // eslint-disable-next-line
     for (const p of pathList) {
       // @ts-ignore
