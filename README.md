@@ -2,7 +2,7 @@
 
 📦  ZTZ Table，一个为开发者准备的基于 Vue 3.0 和 Element Plus 的数据表格二次封装的组件库，旨在通过配置文件快速生成表格。集成CRUD功能，通过简单配置，快速完成一个基本的增删查改功能。
 
-**[文档在这里](https://ztz-table.andou.live)**
+**[文档在这里](https://ztz-table.andou.live:9527)**
 
 ## Environment Support
 
