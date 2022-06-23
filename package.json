@@ -1,6 +1,6 @@
 {
   "name": "ztz-table",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "表格",
   "license": "MIT",
   "scripts": {
@@ -11,11 +11,7 @@
   },
   "dependencies": {
     "core-js": "^3.8.3",
-    "element-plus": "^2.2.6",
-    "lodash": "^4.17.21",
-    "vue": "^3.2.13",
-    "vue-router": "^4.0.16",
-    "vuex": "^4.0.2"
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
@@ -34,7 +30,11 @@
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-vue": "^8.0.3",
     "eslint-plugin-vuejs-accessibility": "^1.1.0",
-    "jest": "^27.0.5"
+    "jest": "^27.0.5",
+    "element-plus": "^2.2.6",
+    "vue": "^3.2.13",
+    "vue-router": "^4.0.16",
+    "vuex": "^4.0.2"
   },
   "repository": "https://github.com/ztz2/ztz-table"
 }

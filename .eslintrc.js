@@ -19,6 +19,7 @@ module.exports = {
     'no-use-before-define': 0,
     'no-restricted-syntax': 0,
     'max-classes-per-file': 0,
+    'consistent-return': 0,
     'vue/multi-word-component-names': 0,
   },
   overrides: [

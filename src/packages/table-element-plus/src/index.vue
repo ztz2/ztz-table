@@ -1,6 +1,5 @@
 <template>
   <div class="ztz-table-wrapper">
-    <ElButton @click="visibleAddDialogRef=true">新增</ElButton>
     <div v-loading="loadingTableDataRef" class="ztz-table__body">
       <!-- 表格区域 -->
       <div class="ztz-table__content">
@@ -16,9 +15,9 @@
       <div
         class="ztz-table__pagination"
         :class="{
-          'ztz-table__pagination--right': paginationPropsRef.position === 'right'
+          'ztz-table__pagination--right': paginationRef.position === 'right'
         }"
-        v-if="!hidePagination"
+        v-if="!hidePaginationComputed"
       >
         <ElSpace>
           <div v-if="slots.paginationLeftSide">
@@ -26,11 +25,11 @@
           </div>
           <ElPagination
             v-bind="$attrs"
-            v-model:currentPage="paginationPropsRef.pageNum"
-            :="paginationPropsRef"
-            :layout="paginationPropsRef.layout"
-            :total="paginationPropsRef.total"
-            :page-size="paginationPropsRef.pageSize"
+            v-model:currentPage="paginationRef.pageNum"
+            :="paginationRef"
+            :layout="paginationRef.layout"
+            :total="paginationRef.total"
+            :page-size="paginationRef.pageSize"
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
           />
@@ -43,7 +42,7 @@
   </div>
 
   <!-- 新增模态框 -->
-  <template v-if="hasAddRef">
+  <template v-if="hasAddComputed">
     <ElDialog
       v-model="visibleAddDialogRef"
       v-bind="currentCrudRef.add.dialogProps"
@@ -59,12 +58,12 @@
   </template>
 
   <!-- 编辑模态框 -->
-  <template v-if="hasEditRef">
+  <template v-if="hasEditComputed">
     <ElDialog
       v-model="visibleEditDialogRef"
       v-bind="currentCrudRef.edit.dialogProps"
     >
-      <div>
+      <div v-loading="loadingEditEntityRef">
         <component
           v-loading="loadingEditRef"
           :data="editFormModelRef"
@@ -74,7 +73,11 @@
       </div>
       <template #footer>
         <ElButton @click="visibleEditDialogRef = false">取消</ElButton>
-        <ElButton :loading="loadingEditRef" @click="handleSubmit('edit')" type="primary">确定</ElButton>
+        <ElButton
+          :loading="loadingEditRef"
+          :disabled="loadingEditEntityRef"
+          @click="handleSubmit('edit')"
+          type="primary">确定</ElButton>
       </template>
     </ElDialog>
   </template>
@@ -82,9 +85,11 @@
 
 <script setup>
 import {
+  get,
   merge,
   cloneDeep,
 } from 'lodash';
+
 import {
   h,
   ref,
@@ -93,7 +98,7 @@ import {
   useSlots,
   defineProps,
   watchEffect,
-  defineExpose,
+  defineExpose, nextTick,
 } from 'vue';
 import {
   ElTable,
@@ -116,8 +121,8 @@ import {
 import {
   TableCrud,
   TableRowOptions,
-  PaginationDefaultProps,
-} from './types';
+  TablePagination,
+} from './config';
 
 const props = defineProps({
   columns: {
@@ -133,7 +138,7 @@ const props = defineProps({
     default: () => ({}),
   },
   crud: {
-    type: Object,
+    type: TableCrud,
     default: () => null,
   },
   // 是否立即执行搜索
@@ -142,13 +147,27 @@ const props = defineProps({
     default: true,
   },
   // 分页属性
-  paginationProps: {
-    type: Object,
-    default: () => (new PaginationDefaultProps()),
+  pagination: {
+    type: TablePagination,
+    default: () => (new TablePagination()),
   },
   // 影藏分页
-  hidePagination: Boolean,
+  hidePagination: {
+    type: [Boolean, null],
+    default: null,
+  },
+  // 表格数据Key
+  dataKey: {
+    type: String,
+    default: 'content',
+  },
+  // 总条数Key
+  totalKey: {
+    type: String,
+    default: 'total',
+  },
 });
+
 const slots = useSlots();
 const tableDataRef = ref([]);
 const addFormRef = ref(null);
@@ -160,16 +179,24 @@ const columnVNodeRenderRef = ref({ render: undefined });
 
 const loadingAddRef = ref(false);
 const loadingEditRef = ref(false);
+const loadingEditEntityRef = ref(false);
 const loadingTableDataRef = ref(false);
-const paginationPropsRef = ref(props.paginationProps);
+const paginationRef = ref(props.pagination);
+const paginationBackupRef = ref(props.pagination);
 const editFormModelRef = ref({});
 const queryParamsRef = ref({});
 const queryParamsBackupRef = ref({});
 const requestContentRef = ref({});
 
-const hasAddRef = computed(() => !!currentCrudRef.value?.add?.api && !!currentCrudRef.value?.add?.formComponent);
-const hasEditRef = computed(() => !!currentCrudRef.value?.edit?.api && !!currentCrudRef.value?.edit?.formComponent);
-const hasDeleteRef = computed(() => !!currentCrudRef.value?.delete?.api);
+const hasAddComputed = computed(() => !!currentCrudRef.value?.add?.api && !!currentCrudRef.value?.add?.formComponent);
+const hasEditComputed = computed(() => !!currentCrudRef.value?.edit?.api && !!currentCrudRef.value?.edit?.formComponent);
+const hasDeleteComputed = computed(() => !!currentCrudRef.value?.delete?.api);
+const hidePaginationComputed = computed(() => {
+  if (typeof props.hidePagination === 'boolean') {
+    return props.hidePagination;
+  }
+  return typeof props.data !== 'function';
+});
 
 // 表格数据赋值，一定要使用这个方法
 const setTableData = (data = []) => {
@@ -179,6 +206,7 @@ const setTableData = (data = []) => {
     return item;
   });
 };
+
 // 创建CRUD功能按钮
 const createCrudBtn = function (config, ...args) {
   const { row } = args[0];
@@ -203,7 +231,7 @@ const createCrudBtn = function (config, ...args) {
 
   // 编辑功能按钮
   if (
-    hasEditRef.value
+    hasEditComputed.value
     && injectEdit
     && editPermission !== false
   ) {
@@ -213,12 +241,12 @@ const createCrudBtn = function (config, ...args) {
       disabled: options.disabledEdit || options.loadingDelete,
       onClick: (e) => {
         // eslint-disable-next-line no-use-before-define
-        handleCrudEdit.apply(this, [...args, e]);
+        handleEdit.apply(this, [...args, e]);
       },
     }, ['编辑']));
   }
   // 删除功能按钮
-  if (hasDeleteRef.value
+  if (hasDeleteComputed.value
     && injectDelete
     && deletePermission !== false
   ) {
@@ -241,6 +269,7 @@ const createCrudBtn = function (config, ...args) {
   }
   return result;
 };
+
 // 向表格中注入CRUD的功能
 const injectCurd2ColumnVNode = (columnVNodeList = []) => {
   columnVNodeList.forEach((columnVNode) => {
@@ -301,22 +330,25 @@ watchEffect(() => {
 
 // 分页配置
 watchEffect(() => {
-  paginationPropsRef.value = merge(new PaginationDefaultProps(), props.paginationProps);
+  if (Object.keys(props.pagination).length > 0 && paginationBackupRef.value == null) {
+    paginationBackupRef.value = cloneDeep(props.pagination);
+  }
+  paginationRef.value = merge(new TablePagination(), paginationBackupRef.value);
 });
 
 // 分页字段获取
 watchEffect(() => {
-  if (typeof props.paginationProps?.pageSize === 'number') {
-    paginationPropsRef.value.pageSize = props.paginationProps?.pageSize;
+  if (typeof props.pagination?.pageSize === 'number') {
+    paginationRef.value.pageSize = props.pagination?.pageSize;
   }
-  if (typeof props.paginationProps?.pageNum === 'number') {
-    paginationPropsRef.value.pageNum = props.paginationProps?.pageNum;
+  if (typeof props.pagination?.pageNum === 'number') {
+    paginationRef.value.pageNum = props.pagination?.pageNum;
   }
-  if (typeof props.paginationProps?.currentPage === 'number') {
-    paginationPropsRef.value.pageNum = props.paginationProps?.currentPage;
+  if (typeof props.pagination?.currentPage === 'number') {
+    paginationRef.value.pageNum = props.pagination?.currentPage;
   }
-  if (typeof props.paginationProps?.layout === 'string') {
-    paginationPropsRef.value.layout = props.paginationProps?.layout;
+  if (typeof props.pagination?.layout === 'string') {
+    paginationRef.value.layout = props.pagination?.layout;
   }
 });
 
@@ -362,18 +394,46 @@ if (typeof slots.columns === 'function') {
   };
 }
 
-// 编辑
-const handleCrudEdit = function ({ row }) {
+// 新增，添加
+const showAddDialog = () => {
+  if (hasAddComputed.value) {
+    visibleAddDialogRef.value = true;
+  }
+};
+
+// 编辑，修改
+const handleEdit = ({ row }) => {
+  visibleEditDialogRef.value = true;
   if (row._options.uid === editFormModelRef.value?._options?.uid) {
     return;
   }
-  editFormModelRef.value = cloneDeep(row);
-  visibleEditDialogRef.value = true;
-  loadingEditRef.value = false;
+  nextTick(() => {
+    // 重置表单
+    editFormRef.value?.resetFields?.();
+    editFormRef.value?.clearValidate?.();
+    row = cloneDeep(row);
+    loadingEditRef.value = false;
+    editFormModelRef.value = row;
+    // 判断是否有详情接口，有详情接口使用详情接口获取实体
+    if (typeof currentCrudRef.value.edit.detailApi === 'function') {
+      const params = { ...row };
+      delete params._options;
+      loadingEditEntityRef.value = true;
+      currentCrudRef.value.edit.detailApi(params).then((res) => {
+        if (editFormModelRef.value?._options?.uid === row._options.uid) {
+          res._options = row._options;
+          editFormModelRef.value = res;
+          loadingEditEntityRef.value = false;
+        }
+      });
+    } else {
+      loadingEditEntityRef.value = false;
+    }
+  });
 };
 
 // 删除
-const handleDelete = function ({ row }) {
+const handleDelete = ({ row }) => {
   const params = cloneDeep(row);
   delete params._options;
   row._options.loadingDelete = true;
@@ -388,13 +448,13 @@ const handleDelete = function ({ row }) {
 const fetchTableData = () => {
   if (typeof props.data === 'function') {
     const params = cloneDeep(queryParamsRef.value, {
-      pageNum: paginationPropsRef.value.pageNum,
-      pageSize: paginationPropsRef.value.pageSize,
+      pageNum: paginationRef.value.pageNum,
+      pageSize: paginationRef.value.pageSize,
     });
     loadingTableDataRef.value = true;
     props.data(params).then((res) => {
-      setTableData(res.content);
-      paginationPropsRef.value.total = res.total;
+      setTableData(get(res, props.dataKey));
+      paginationRef.value.total = get(res, props.totalKey);
       requestContentRef.value = res;
     }).finally(() => {
       loadingTableDataRef.value = false;
@@ -404,34 +464,39 @@ const fetchTableData = () => {
   }
 };
 
-// 刷新表格数据，不会有任何重置
-const refreshTable = () => {
-  fetchTableData();
-};
-
-// 重新加载表格数据，重置搜索条件，重置分页
-const reloadTable = () => {
-  queryParamsRef.value = cloneDeep(queryParamsBackupRef.value);
-  paginationPropsRef.value.pageNum = props.paginationProps.pageNum;
-  paginationPropsRef.value.pageSize = props.paginationProps.pageSize;
+/**
+ * @description 刷新表格数据
+ * @param options { Object= } 可选配置
+ * @param options.resetPageNum { boolean= } 重置分页到初始值
+ * @param options.resetQueryParams { boolean= } 重置搜索条件到初始值
+ */
+const refreshTable = (options = { resetPageNum: false, resetQueryParams: false }) => {
+  if (options?.resetPageNum) {
+    paginationRef.value.pageNum = paginationBackupRef.value.pageNum ?? 1;
+  }
+  if (options?.resetQueryParams) {
+    queryParamsRef.value = cloneDeep(queryParamsBackupRef.value);
+  }
   fetchTableData();
 };
 
 const handleSizeChange = (val) => {
-  paginationPropsRef.value.pageSize = val;
+  paginationRef.value.pageSize = val;
   refreshTable();
 };
 
 const handleCurrentChange = (val) => {
-  paginationPropsRef.value.pageNum = val;
+  paginationRef.value.pageNum = val;
   refreshTable();
 };
 
+// 修改和新增的时候，提交表单
 const handleSubmit = (type) => {
   const isAdd = type === 'add';
   const formRef = isAdd ? addFormRef.value.getFormRef() : editFormRef.value.getFormRef();
   const entity = cloneDeep(isAdd ? addFormRef.value.getFormModel() : editFormRef.value.getFormModel());
   const c = isAdd ? currentCrudRef.value.add : currentCrudRef.value.edit;
+  const options = entity._options;
   delete entity._options;
   formRef.validate((valid) => {
     if (valid) {
@@ -440,7 +505,10 @@ const handleSubmit = (type) => {
       } else {
         loadingEditRef.value = true;
       }
-      c.api(entity).then(() => {
+      c.api(entity).then((d) => {
+        if (!isAdd && options.uid !== editFormModelRef.value?._options?.uid) {
+          return d;
+        }
         const msg = c.successMsg;
         formRef.resetFields();
         formRef.clearValidate();
@@ -458,7 +526,10 @@ const handleSubmit = (type) => {
             type: 'success',
           });
         }
-      }).catch(() => {
+      }).catch((e) => {
+        if (!isAdd && options.uid !== editFormModelRef.value?._options?.uid) {
+          return e;
+        }
         const msg = c.errorMsg;
         if (msg) {
           ElMessage({
@@ -468,6 +539,9 @@ const handleSubmit = (type) => {
           });
         }
       }).finally(() => {
+        if (!isAdd && options.uid !== editFormModelRef.value?._options?.uid) {
+          return;
+        }
         if (isAdd) {
           loadingAddRef.value = false;
         } else {
@@ -480,17 +554,16 @@ const handleSubmit = (type) => {
 
 // 立即执行搜索
 if (props.immediate) {
-  reloadTable();
+  refreshTable();
 }
 
 // 对外暴露的方法
 defineExpose({
+  showAddDialog,
   refreshTable,
-  reloadTable,
 });
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
 .ztz-table__pagination{
   margin-top: 12px;

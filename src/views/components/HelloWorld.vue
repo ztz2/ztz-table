@@ -1,13 +1,15 @@
 <template>
   <div class="hello">
+    <button @click="ztzTableRef.showAddDialog()">新增</button>
     <button @click="visible=!visible">{{ visible ? '关闭' : '开启'}}</button>
     <button @click="handleAdd">添加表头</button>
     <button @click="handleDelete">移除表头</button>
     <button @click="visibleAddressRef=!visibleAddressRef">{{ visibleAddressRef ? '关闭address' : '开启address'}}</button>
     <ztz-table
-      :columns="columns"
-      :data="pageApi"
       :crud="crud"
+      :data="pageApi"
+      :columns="columns"
+      ref="ztzTableRef"
     >
       <template #columns>
         <el-table-column prop="date" label="时间" width="180"  />
@@ -44,6 +46,7 @@ import AddForm from './AddForm.vue';
 defineComponent({
   ZtzTable,
 });
+const ztzTableRef = ref(null);
 const visibleAddressRef = ref(false);
 const crud = reactive({
   add: {
@@ -58,6 +61,10 @@ const crud = reactive({
     api: deleteApi,
   },
 });
+// const pagination = reactive({
+//   pageSize: 100,
+//   pageNum: 2,
+// });
 const columns = reactive([
   { prop: 'date', label: 'Date' },
   { prop: 'name', label: 'name' },

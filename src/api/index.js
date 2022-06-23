@@ -46,11 +46,11 @@ export const addApi = (data) => {
 // 编辑接口
 export const editApi = (data) => {
   console.log('【editApi】请求参数：', data);
-  return new Promise((resolve) => { setTimeout(() => { resolve(null); }, 921 + Math.random() * 2000); });
+  return new Promise((resolve) => { setTimeout(() => { resolve(null); }, 24921 + Math.random() * 2000); });
 };
 
 // 删除接口
 export const deleteApi = (data) => {
   console.log('【deleteApi】请求参数：', data);
-  return new Promise((resolve) => { setTimeout(() => { resolve(null); }, 924 + Math.random() * 2000); });
+  return new Promise((resolve) => { setTimeout(() => { resolve(null); }, 924 + Math.random() * 21000); });
 };

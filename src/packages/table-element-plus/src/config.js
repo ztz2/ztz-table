@@ -75,7 +75,7 @@ export class TableRowOptions {
 }
 
 // 更多属性参考 饿了么UI文档
-export class PaginationDefaultProps {
+export class TablePagination {
   // 当前页
   pageNum = 1;
 
