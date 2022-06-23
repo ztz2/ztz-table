@@ -17,18 +17,15 @@
       <ol><CheckSquareOutlined /> 支持对 element-plus table 兼容其 template 语法，同时也可以使用JS配置对象</ol>
       <ol><CheckSquareOutlined /> CRUD集成，低耦合，基于API，兼容所有项目</ol>
       <ol><CheckSquareOutlined /> 支持CRUD功能中进行权限控制，精确到行，具体到功能按钮</ol>
-      <ol><MinusSquareOutlined /> 对 view-ui-plus 表格封装进行中...</ol>
-      <ol><MinusSquareOutlined /> 对 ant-design-vue 表格封装进行中...</ol>
     </ul>
   </div>
 </template>
 <script>
-import { CheckSquareOutlined, MinusSquareOutlined } from '@ant-design/icons-vue';
+import { CheckSquareOutlined } from '@ant-design/icons-vue';
 
 export default {
   components: {
     CheckSquareOutlined,
-    MinusSquareOutlined,
   },
 };
 </script>

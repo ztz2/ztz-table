@@ -18,8 +18,6 @@
 - [x] 支持对 element-plus table 兼容其 template 语法，同时也可以使用JS配置对象
 - [x] CRUD集成，低耦合，基于API，兼容所有项目
 - [x] 支持CRUD功能中进行权限控制，精确到行，具体到功能按钮
-- [ ] 对 view-ui-plus 表格封装进行中...
-- [ ] 对 ant-design-vue 表格封装进行中...
 
 ## License
 

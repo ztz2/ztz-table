@@ -16,25 +16,19 @@
     <div class="app-body">
       <div
         class="app-nav"
-        :style="{overflow: mouseIn ? 'auto' : 'hidden'}"
-        @mouseenter="mouseIn=true"
-        @mouseleave="mouseIn=false"
+        :style="{overflow: mouseInRef ? 'auto' : 'hidden'}"
+        @mouseenter="mouseInRef=true"
+        @mouseleave="mouseInRef=false"
       >
-        <Menu active-name="1">
-          <MenuGroup title="指南">
-            <MenuItem name="1" to="/about">
-              介绍
-            </MenuItem>
-            <MenuItem name="2" to="/start">
-              快速开始
-            </MenuItem>
-          </MenuGroup>
-          <MenuGroup title="配置说明">
-            <MenuItem name="3" to="/doc-element-plus">
-              基于 element-plus 表格配置
-            </MenuItem>
-          </MenuGroup>
-        </Menu>
+        <a-menu v-model:selectedKeys="activeMenu">
+          <a-menu-item-group title="指南">
+            <a-menu-item @click="$router.push('/about')" key="about" to="/about">介绍</a-menu-item>
+            <a-menu-item @click="$router.push('/start')" key="start" to="/start">快速开始</a-menu-item>
+          </a-menu-item-group>
+          <a-menu-item-group title="配置说明">
+            <a-menu-item @click="$router.push('/doc-element-plus')" key="doc-element-plus">介绍</a-menu-item>
+          </a-menu-item-group>
+        </a-menu>
       </div>
       <div class="app-content">
         <router-view/>
@@ -42,20 +36,16 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
+import { ref, reactive, onMounted } from 'vue';
 import { GithubOutlined, RadiusBottomrightOutlined } from '@ant-design/icons-vue';
 
-export default {
-  components: {
-    GithubOutlined,
-    RadiusBottomrightOutlined,
-  },
-  data() {
-    return {
-      mouseIn: false,
-    };
-  },
-};
+const mouseInRef = ref(false);
+const activeMenu = reactive([]);
+
+onMounted(() => {
+  activeMenu.push(window.location.hash.replace('#/', ''));
+});
 </script>
 <style>
 .app-header{
