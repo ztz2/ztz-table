@@ -4,6 +4,7 @@
     <h2>环境支持</h2>
     <p>ZTZ Table 是一个依赖 Vue 3 开发的表格组件库。如果是 Vue2 请自行升级后使用。</p>
     <h2>包管理器安装</h2>
+    <p>使用前请安装 <a href="https://element-plus.gitee.io">element-plus</a></p>
     <div><code-box :code="installCode" :show-copy="false"></code-box></div>
     <p></p>
     <h2>引入到项目中</h2>
