@@ -365,6 +365,7 @@ watchEffect(() => {
 watchEffect(() => {
   if (typeof slots.columns !== 'function') {
     const columnVNodeList = props.columns.map((column, index) => {
+      column = cloneDeep(column);
       // 差异
       const label = getLabel(column);
       column.slots = {};
