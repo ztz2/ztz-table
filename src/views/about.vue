@@ -20,14 +20,8 @@
     </ul>
   </div>
 </template>
-<script>
+<script setup>
 import { CheckSquareOutlined } from '@ant-design/icons-vue';
-
-export default {
-  components: {
-    CheckSquareOutlined,
-  },
-};
 </script>
 <style scoped>
 .text-center{

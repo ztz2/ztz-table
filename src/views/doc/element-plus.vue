@@ -1,60 +1,60 @@
 <template>
   <div class="doc-element-plus">
-    <a-space :size="30" direction="vertical" style="width: 100%;">
-      <a-card title="基本使用">
+    <el-space :size="30" direction="vertical" style="width: 100%;" fill>
+      <el-card header="基本使用">
         <div>
           <p>通过配置columns对象，快速创建一个表格</p>
           <ztz-table :columns="columns" :data="tableData"></ztz-table>
         </div>
         <div class="gap24">
-          <a-collapse>
-            <a-collapse-panel key="1" header="查看代码">
+          <el-collapse>
+            <el-collapse-item title="查看代码" name="1">
               <code-box :code="baseDemoCode"></code-box>
-            </a-collapse-panel>
-          </a-collapse>
+            </el-collapse-item>
+          </el-collapse>
         </div>
-      </a-card>
-      <a-card title="使用template语法">
+      </el-card>
+      <el-card header="使用template语法">
         <div>
           <p>使用template模板语法，需要使用一个 <strong>columns</strong> 插槽，其他属性参数和饿了么UI保持一致，包括自定义渲染表头和单元格</p>
           <ztz-table :columns="columns" :data="tableData"></ztz-table>
         </div>
         <div class="gap24">
-          <a-collapse>
-            <a-collapse-panel key="1" header="查看代码">
+          <el-collapse>
+            <el-collapse-item title="查看代码" name="1">
               <code-box :code="templateDemoCode"></code-box>
-            </a-collapse-panel>
-          </a-collapse>
+            </el-collapse-item>
+          </el-collapse>
         </div>
-      </a-card>
-      <a-card title="自定义渲染表头">
+      </el-card>
+      <el-card header="自定义渲染表头">
         <div>
           <p>通过使用 <strong>renderHeader</strong> 函数进行自定义列头显示内容。</p>
           <ztz-table :columns="columns2" :data="tableData"></ztz-table>
         </div>
         <div class="gap24">
-          <a-collapse>
-            <a-collapse-panel key="1" header="查看代码">
+          <el-collapse>
+            <el-collapse-item title="查看代码" name="1">
               <code-box :code="customHeaderDemoCode"></code-box>
-            </a-collapse-panel>
-          </a-collapse>
+            </el-collapse-item>
+          </el-collapse>
         </div>
-      </a-card>
-      <a-card title="自定义渲染单元格">
+      </el-card>
+      <el-card header="自定义渲染单元格">
         <div>
           <p>通过使用 <strong>render</strong> 函数进行自定义单元格显示内容。</p>
           <ztz-table :columns="columns3" :data="tableData"></ztz-table>
         </div>
         <div class="gap24">
-          <a-collapse>
-            <a-collapse-panel key="1" header="查看代码">
+          <el-collapse>
+            <el-collapse-item title="查看代码" name="1">
               <code-box :code="customRenderDemoCode"></code-box>
-            </a-collapse-panel>
-          </a-collapse>
+            </el-collapse-item>
+          </el-collapse>
         </div>
-      </a-card>
-      <h2>高级功能-CRUD之列表查询</h2>
-      <a-card title="CRUD-列表查询">
+      </el-card>
+      <h2 style="margin-bottom: 0">高级功能-CRUD之列表查询</h2>
+      <el-card header="CRUD-列表查询">
         <div>
           <p>表格 <strong>data</strong> 属性接收一个后端接口函数，表格加载完成将会调用该接口请求数据进行渲染。
             当 <strong>data</strong> 是一个函数的时候，则认为这是一个动态的表格，将会自动启用分页功能，当然可以使用 <strong>hidePagination</strong> 属性进行关闭</p>
@@ -68,14 +68,14 @@
           ></ztz-table>
         </div>
         <div class="gap24">
-          <a-collapse>
-            <a-collapse-panel key="1" header="查看代码">
+          <el-collapse>
+            <el-collapse-item title="查看代码" name="1">
               <code-box :code="crudQueryDemoCode"></code-box>
-            </a-collapse-panel>
-          </a-collapse>
+            </el-collapse-item>
+          </el-collapse>
         </div>
-      </a-card>
-      <a-card title="CRUD-列表查询-含有搜索条件">
+      </el-card>
+      <el-card header="CRUD-列表查询-含有搜索条件">
         <div>
           <p>通过 <strong>queryParams</strong> 属性接收搜索条件，使用 ref 获取 ZtzTable 实例，调用 <strong>refreshTable</strong> 函数进行刷新表格，重新获取数据，该函数接收两个参数：resetPageNum - 是否重置当前页数，resetQueryParams - 是否重置当前参数，可根据这两个参数进行重置搜索功能，默认都是false</p>
           <el-form :model="queryParams" label-width="54px" inline>
@@ -104,14 +104,14 @@
           ></ztz-table>
         </div>
         <div class="gap24">
-          <a-collapse>
-            <a-collapse-panel key="1" header="查看代码">
+          <el-collapse>
+            <el-collapse-item title="查看代码" name="1">
               <code-box :code="crudQueryByParamsDemoCode"></code-box>
-            </a-collapse-panel>
-          </a-collapse>
+            </el-collapse-item>
+          </el-collapse>
         </div>
-      </a-card>
-      <a-card title="CRUD-列表查询-根据搜索条件动态变化刷新表格">
+      </el-card>
+      <el-card header="CRUD-列表查询-根据搜索条件动态变化刷新表格">
         <div>
           <p>增加 <strong>dynamic</strong> 属性即可，监听参数变化的输入是比较频繁的，内部默认有350ms的防抖策略，还是推荐自行配置使用ajax取消重复请求功能。</p>
           <el-form :model="queryParams" label-width="54px" inline>
@@ -131,22 +131,23 @@
             :query-params="queryParams"
             :pagination="pagination"
             dynamic
-            ref="ztzTableRef"
             list-key="content"
             total-key="total"
           ></ztz-table>
         </div>
         <div class="gap24">
-          <a-collapse>
-            <a-collapse-panel key="1" header="查看代码">
+          <el-collapse>
+            <el-collapse-item title="查看代码" name="1">
               <code-box :code="crudQueryByDynamicParamsDemoCode"></code-box>
-            </a-collapse-panel>
-          </a-collapse>
+            </el-collapse-item>
+          </el-collapse>
         </div>
-      </a-card>
-      <h2>CRUD中剩余的增删改配置</h2>
-      <p>增删改功能需要在 <strong>curd</strong> 属性中进行配置扩展该功能</p>
-      <a-card title="CRUD-删除功能">
+      </el-card>
+      <div>
+        <h2>CRUD中剩余的增删改配置</h2>
+        <div class="gap10">增删改功能需要在 <strong>curd</strong> 属性中进行配置扩展该功能</div>
+      </div>
+      <el-card header="CRUD-删除功能">
         <div>
           <ol>
             <li>1. 在 <strong>crud</strong> 属性中 delete->api 增加删除接口API配置</li>
@@ -162,14 +163,14 @@
           ></ztz-table>
         </div>
         <div class="gap24">
-          <a-collapse>
-            <a-collapse-panel key="1" header="查看代码">
+          <el-collapse>
+            <el-collapse-item title="查看代码" name="1">
               <code-box :code="crudDeleteDemoCode"></code-box>
-            </a-collapse-panel>
-          </a-collapse>
+            </el-collapse-item>
+          </el-collapse>
         </div>
-      </a-card>
-      <a-card title="CRUD-添加功能">
+      </el-card>
+      <el-card header="CRUD-添加功能">
         <div>
           <ol>
             <li>1.该功能实现基于Vue动态组件（类似React render props）功能实现，所以 <strong>crud</strong> 配置中需要传递一个添加表单组件 <strong>add-form-component.vue</strong> 进来</li>
@@ -190,17 +191,17 @@
           ></ztz-table>
         </div>
         <div class="gap24">
-          <a-collapse>
-            <a-collapse-panel key="1" header="table - 查看代码">
+          <el-collapse>
+            <el-collapse-item title="table - 查看代码" name="1">
               <code-box :code="crudAddDemoCode"></code-box>
-            </a-collapse-panel>
-            <a-collapse-panel key="2" header="add-form-component.vue - 查看代码">
+            </el-collapse-item>
+            <el-collapse-item title="edit-form-component.vue - 查看代码" name="2">
               <code-box :code="crudAddFormComponentDemoCode"></code-box>
-            </a-collapse-panel>
-          </a-collapse>
+            </el-collapse-item>
+          </el-collapse>
         </div>
-      </a-card>
-      <a-card title="CRUD-修加功能">
+      </el-card>
+      <el-card header="CRUD-修加功能">
         <div>
           修改功能实现方式基本和新增类似。
           <ol>
@@ -218,17 +219,17 @@
           ></ztz-table>
         </div>
         <div class="gap24">
-          <a-collapse>
-            <a-collapse-panel key="1" header="table - 查看代码">
+          <el-collapse>
+            <el-collapse-item title="table - 查看代码" name="1">
               <code-box :code="crudEditDemoCode"></code-box>
-            </a-collapse-panel>
-            <a-collapse-panel key="2" header="edit-form-component.vue - 查看代码">
+            </el-collapse-item>
+            <el-collapse-item title="edit-form-component.vue - 查看代码" name="2">
               <code-box :code="crudEditFormComponentDemoCode"></code-box>
-            </a-collapse-panel>
-          </a-collapse>
+            </el-collapse-item>
+          </el-collapse>
         </div>
-      </a-card>
-    </a-space>
+      </el-card>
+    </el-space>
   </div>
 </template>
 <script setup>
@@ -380,5 +381,9 @@ const editCRUD = reactive({
 <style scoped>
 ul, ol {
   list-style: none;
+  padding-left: 0;
+}
+::v-deep .el-card__header{
+  font-size: 18px;
 }
 </style>

@@ -4,19 +4,19 @@
       <div><pre v-highlight><code class="javascript">{{ code }}</code></pre></div>
     </div>
     <div v-if="showCopy && code && code.trim().length > 0" class="code-box__handle">
-      <CopyOutlined title="复制代码" ref="copyBtnRef" />
+      <el-icon ref="copyBtnRef" title="复制代码"><CopyDocument /></el-icon>
     </div>
   </div>
 </template>
 <script>
 import ClipboardJS from 'clipboard';
-import { message } from 'ant-design-vue';
-import { CopyOutlined } from '@ant-design/icons-vue';
+import { ElMessage } from 'element-plus';
+import { CopyDocument } from '@element-plus/icons-vue';
 
 export default {
   name: 'code-box',
   components: {
-    CopyOutlined,
+    CopyDocument,
   },
   props: {
     code: String,
@@ -37,13 +37,15 @@ export default {
         if (code) {
           this.$nextTick(() => {
             const { copyBtnRef } = this.$refs;
-            if (copyBtnRef) {
-              const el = copyBtnRef;
+            if (copyBtnRef?.$el) {
+              const el = copyBtnRef.$el;
               this.clipboard?.destroy?.();
               this.clipboard = new ClipboardJS(el, { text: () => code });
               this.clipboard.on('success', () => {
-                console.log(123321);
-                message.success('复制成功');
+                ElMessage({
+                  message: '复制成功',
+                  type: 'success',
+                });
               });
             }
           });
@@ -60,11 +62,12 @@ export default {
 .code-box{
   min-height: 140px;
   position: relative;
+  line-height: 20px;
 }
 .code-box__handle{
   position: absolute;
   right: 20px;
-  bottom: 20px;
+  top: 20px;
   color: #fff;
   font-size: 30px;
   cursor: pointer;

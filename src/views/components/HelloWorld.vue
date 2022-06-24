@@ -1,7 +1,6 @@
 <template>
   <div class="hello">
-    <Button>Default</Button>
-    <a-button type="primary">Primary Button</a-button>
+    <el-button type="primary">Primary Button</el-button>
     <el-button>默认按钮</el-button>
     <button @click="ztzTableRef.showAddDialog()">新增</button>
     <button @click="visible=!visible">{{ visible ? '关闭' : '开启'}}</button>
@@ -37,20 +36,17 @@
 </template>
 
 <script setup>
-import { Button } from 'ant-design-vue';
-import { defineComponent, reactive, ref } from 'vue';
+import { reactive, ref } from 'vue';
 import {
-  addApi, deleteApi, editApi,
+  addApi,
+  editApi,
   pageApi,
+  deleteApi,
 } from '@/api';
 import ZtzTable from '@/packages/table-element-plus/src/index.vue';
 
 import AddForm from './AddForm.vue';
 
-defineComponent({
-  Button,
-  ZtzTable,
-});
 const ztzTableRef = ref(null);
 const visibleAddressRef = ref(false);
 const crud = reactive({
@@ -81,7 +77,6 @@ const handleAdd = () => {
 
 const handleDelete = () => {
   columns.shift();
-  console.log(columns);
 };
 
 // const fetchTableData = pageListApi;

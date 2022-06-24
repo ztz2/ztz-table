@@ -8,28 +8,28 @@
         </a>
       </div>
       <div class="app-header__r">
-        <a-space :size="20">
+        <el-space :size="20" style="margin-right: -20px">
           <a href="https://sh.andou.live:9527" target="_blank">Swagger Helper 工具</a>
           <a href="https://github.com/ztz2/ztz-table" target="_blank"><GithubOutlined style="font-size: 28px; color: #333333" /></a>
-        </a-space>
+        </el-space>
       </div>
     </div>
     <div class="app-body">
       <div
         class="app-nav"
-        :style="{overflow: mouseInRef ? 'auto' : 'hidden'}"
+        :style="{overflow: mouseInRef ? 'auto' : 'hidden', paddingTop: '18px'}"
         @mouseenter="mouseInRef=true"
         @mouseleave="mouseInRef=false"
       >
-        <a-menu v-model:selectedKeys="activeMenu">
-          <a-menu-item-group title="指南">
-            <a-menu-item @click="$router.push('/about')" key="about" to="/about">介绍</a-menu-item>
-            <a-menu-item @click="$router.push('/start')" key="start" to="/start">快速开始</a-menu-item>
-          </a-menu-item-group>
-          <a-menu-item-group title="配置说明">
-            <a-menu-item @click="$router.push('/doc-element-plus')" key="doc-element-plus">基于 element-plus 表格配置</a-menu-item>
-          </a-menu-item-group>
-        </a-menu>
+        <el-menu :default-active="activeMenuRef">
+          <el-menu-item-group title="指南">
+            <el-menu-item @click="$router.push('/about')" index="about" to="/about">介绍</el-menu-item>
+            <el-menu-item @click="$router.push('/start')" index="start" to="/start">快速开始</el-menu-item>
+          </el-menu-item-group>
+          <el-menu-item-group title="配置说明">
+            <el-menu-item @click="$router.push('/doc-element-plus')" index="doc-element-plus">基于 element-plus 表格配置</el-menu-item>
+          </el-menu-item-group>
+        </el-menu>
       </div>
       <div class="app-content">
         <router-view/>
@@ -38,17 +38,30 @@
   </div>
 </template>
 <script setup>
-import { ref, reactive, onMounted } from 'vue';
+import { ref } from 'vue';
 import { GithubOutlined, RadiusBottomrightOutlined } from '@ant-design/icons-vue';
 
 const mouseInRef = ref(false);
-const activeMenu = reactive([]);
+const activeMenuRef = ref('');
 
-onMounted(() => {
-  activeMenu.push(window.location.hash.replace('#/', ''));
-});
+activeMenuRef.value = window.location.hash.replace('#/', '');
 </script>
 <style>
+html, body {
+  margin: 0;
+  padding: 0;
+}
+ol, ul {
+  padding-left: 0;
+}
+a{
+  color: #000000d9;
+  text-decoration: none;
+}
+a:hover, a:active{
+  color: #1890ff;
+}
+
 .app-header{
   position: sticky;
   top: 0;
@@ -67,22 +80,19 @@ onMounted(() => {
   align-items: center;
 }
 .app-header__l > a{
-  padding-left: 20px;
+  padding-left: 6px;
   color: #000000d9;
   font-size: 18px;
   font-weight: 600;
   font-family: Avenir,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji",sans-serif;
 }
+.app-header__l > a:hover, .app-header__l > a:active{
+  color: #1890ff;
+}
 .app-header__r{
   display: flex;
   align-content: center;
   font-size: 16px;
-}
-.app-header__r a{
-  color: #000000d9;
-}
-.app-header__r a:hover{
-  color: #1890ff;
 }
 .app-body{
   display: flex;
