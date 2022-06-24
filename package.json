@@ -44,11 +44,6 @@
     "vuex": "^4.0.2"
   },
   "repository": "https://github.com/ztz2/ztz-table",
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not ie <= 8"
-  ],
   "keywords": [
     "vue",
     "vue-table",
