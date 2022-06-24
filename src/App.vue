@@ -9,6 +9,7 @@
       </div>
       <div class="app-header__r">
         <a-space :size="20">
+          <a href="https://sh.andou.live:9527" target="_blank">Swagger Helper 工具</a>
           <a href="https://github.com/ztz2/ztz-table" target="_blank"><GithubOutlined style="font-size: 28px; color: #333333" /></a>
         </a-space>
       </div>

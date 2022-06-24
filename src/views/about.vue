@@ -34,6 +34,6 @@ export default {
   text-align: center;
 }
 .about p{
-  color: #555;
+  color: #555!important;
 }
 </style>

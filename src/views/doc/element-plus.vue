@@ -111,6 +111,39 @@
           </a-collapse>
         </div>
       </a-card>
+      <a-card title="CRUD-列表查询-根据搜索条件动态变化刷新表格">
+        <div>
+          <p>增加 <strong>dynamic</strong> 属性即可，监听参数变化的输入是比较频繁的，内部默认有350ms的防抖策略，还是推荐自行配置使用ajax取消重复请求功能。</p>
+          <el-form :model="queryParams" label-width="54px" inline>
+            <el-form-item label="时间">
+              <el-date-picker
+                v-model="queryParams.date"
+                type="date"
+              />
+            </el-form-item>
+            <el-form-item label="地点">
+              <el-input v-model="queryParams.address" />
+            </el-form-item>
+          </el-form>
+          <ztz-table
+            :columns="columns"
+            :data="fetchTableDataApi"
+            :query-params="queryParams"
+            :pagination="pagination"
+            dynamic
+            ref="ztzTableRef"
+            list-key="content"
+            total-key="total"
+          ></ztz-table>
+        </div>
+        <div class="gap24">
+          <a-collapse>
+            <a-collapse-panel key="1" header="查看代码">
+              <code-box :code="crudQueryByDynamicParamsDemoCode"></code-box>
+            </a-collapse-panel>
+          </a-collapse>
+        </div>
+      </a-card>
       <h2>CRUD中剩余的增删改配置</h2>
       <p>增删改功能需要在 <strong>curd</strong> 属性中进行配置扩展该功能</p>
       <a-card title="CRUD-删除功能">
@@ -161,7 +194,7 @@
             <a-collapse-panel key="1" header="table - 查看代码">
               <code-box :code="crudAddDemoCode"></code-box>
             </a-collapse-panel>
-            <a-collapse-panel key="1" header="add-form-component.vue - 查看代码">
+            <a-collapse-panel key="2" header="add-form-component.vue - 查看代码">
               <code-box :code="crudAddFormComponentDemoCode"></code-box>
             </a-collapse-panel>
           </a-collapse>
@@ -189,7 +222,7 @@
             <a-collapse-panel key="1" header="table - 查看代码">
               <code-box :code="crudEditDemoCode"></code-box>
             </a-collapse-panel>
-            <a-collapse-panel key="1" header="add-form-component.vue - 查看代码">
+            <a-collapse-panel key="2" header="edit-form-component.vue - 查看代码">
               <code-box :code="crudEditFormComponentDemoCode"></code-box>
             </a-collapse-panel>
           </a-collapse>
@@ -209,6 +242,7 @@ import {
   customRenderDemoCode,
   crudQueryDemoCode,
   crudQueryByParamsDemoCode,
+  crudQueryByDynamicParamsDemoCode,
   crudDeleteDemoCode,
   crudAddDemoCode,
   crudAddFormComponentDemoCode,

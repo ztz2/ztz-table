@@ -198,6 +198,64 @@ const fetchTableDataApi = (params) => {
 };
 </script>\n`;
 
+// CRUD-动态查询
+export const crudQueryByDynamicParamsDemoCode = `<template>
+  <el-form :model="queryParams" label-width="54px" inline>
+    <el-form-item label="时间">
+      <el-date-picker
+        v-model="queryParams.date"
+        type="date"
+      />
+    </el-form-item>
+    <el-form-item label="地点">
+      <el-input v-model="queryParams.address" />
+    </el-form-item>
+  </el-form>
+  <ztz-table
+    :columns="columns"
+    :data="fetchTableDataApi"
+    :query-params="queryParams"
+    ref="ztzTableRef"
+    dynamic
+  />
+</template>
+
+<script setup>
+import { ref, reactive } from 'vue';
+
+const columns = reactive([
+  { prop: 'date', label: '时间', width: '180' },
+  { prop: 'address', label: '地点' },
+]);
+
+// 表格实例
+const ztzTableRef = ref(null);
+
+// 搜索条件
+const queryParams = reactive({
+  date: '',
+  address: '',
+});
+
+// 请求表格数据列表
+const fetchTableDataApi = (params) => {
+  console.log('获取表格数据列表参数：', params);
+  // 使用定时器模拟Ajax请求
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      // 模拟后端接口返回数据
+      resolve({
+        total: 6,
+        content: [
+          { date: '2021-03-05', address: \`北京（\${Math.random()}）\` },
+          { date: '2021-03-06', address: \`上海（\${Math.random()}）\` },
+        ],
+      });
+    }, 1200);
+  });
+};
+</script>\n`;
+
 // CRUD-删除
 export const crudDeleteDemoCode = `<template>
   <ztz-table
@@ -460,7 +518,17 @@ import {
   ref,
   reactive,
   defineExpose,
+  watchEffect,
+  defineProps,
 } from 'vue';
+
+const props = defineProps({
+  // 当修改的时候，实体表单模型通过data传递过来，用于数据回显
+  data: {
+    type: Object,
+    default: () => ({}),
+  },
+});
 
 const formRef = ref();
 const formEntity = reactive({
@@ -473,6 +541,9 @@ const formRules = reactive({
     { required: true, message: '必填项', trigger: 'blur' },
   ],
 });
+
+// 数据回显到表单实体模型
+watchEffect(() => Object.entries(props.data).forEach(([k, v]) => { formEntity[k] = v; }));
 
 // 必须暴露的两个方法
 defineExpose({

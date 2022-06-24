@@ -21,7 +21,9 @@
 import {
   ref,
   reactive,
-  defineExpose, watchEffect, defineProps,
+  defineExpose,
+  watchEffect,
+  defineProps,
 } from 'vue';
 
 const props = defineProps({
@@ -46,7 +48,6 @@ const formRules = reactive({
 
 // 数据回显到实体模型
 watchEffect(() => {
-  // eslint-disable-next-line no-restricted-syntax
   for (const [k, v] of Object.entries(props.data)) { formEntity[k] = v; }
 });
 

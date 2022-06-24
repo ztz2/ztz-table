@@ -87,12 +87,14 @@
 import {
   get,
   merge,
+  debounce,
   cloneDeep,
 } from 'lodash';
 
 import {
   h,
   ref,
+  watch,
   computed,
   Fragment,
   useSlots,
@@ -145,6 +147,11 @@ const props = defineProps({
   immediate: {
     type: Boolean,
     default: true,
+  },
+  // 是否根据queryParams搜索条件动态变化，执行刷新列表
+  dynamic: {
+    type: Boolean,
+    default: false,
   },
   // 分页属性
   pagination: {
@@ -330,6 +337,22 @@ watchEffect(() => {
   queryParamsRef.value = props.queryParams;
 });
 
+let queryParamsWatcher = null;
+// 根据queryParams深度监听动态变化，进行搜索
+watch(() => props.dynamic, (v) => {
+  if (v) {
+    if (queryParamsWatcher == null) {
+      queryParamsWatcher = watch(() => props.queryParams, () => {
+        refreshTable({
+          resetPageNum: true,
+        });
+      }, { deep: true });
+    }
+  } else {
+    queryParamsWatcher?.();
+  }
+}, { immediate: true });
+
 // 表格数据
 watchEffect(() => {
   if (Array.isArray(props.data)) {
@@ -431,7 +454,6 @@ const handleEdit = ({ row }) => {
       loadingEditEntityRef.value = true;
       currentCrudRef.value.edit.detailApi(params).then((res = {}) => {
         res = checkType(res, 'Object') ? res : {};
-        console.log(123);
         if (editFormModelRef.value?._options?.uid === row?._options?.uid) {
           res._options = row._options;
           editFormModelRef.value = res;
@@ -465,7 +487,7 @@ const handleDelete = ({ row }) => {
 };
 
 // 请求表格数据
-const fetchTableData = () => {
+const execFetchTableData = () => {
   if (typeof props.data === 'function') {
     const params = cloneDeep(queryParamsRef.value, {
       pageNum: paginationRef.value.pageNum,
@@ -483,6 +505,7 @@ const fetchTableData = () => {
     loadingTableDataRef.value = false;
   }
 };
+const fetchTableData = debounce(execFetchTableData, 350, { maxWait: 700, leading: false, trailing: true });
 
 /**
  * @description 刷新表格数据
