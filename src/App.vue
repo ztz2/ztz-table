@@ -117,7 +117,7 @@ a:hover, a:active{
   width: 0;
   flex-grow: 1;
   overflow: auto;
-  margin-left: 260px;
+  margin-left: 242px;
   padding: 40px;
 }
 .gap10{margin-top: 10px;}

@@ -505,7 +505,7 @@ const execFetchTableData = () => {
     loadingTableDataRef.value = false;
   }
 };
-const fetchTableData = debounce(execFetchTableData, 350, { maxWait: 700, leading: false, trailing: true });
+const fetchTableData = debounce(execFetchTableData, 250, { maxWait: 700, leading: false, trailing: true });
 
 /**
  * @description 刷新表格数据

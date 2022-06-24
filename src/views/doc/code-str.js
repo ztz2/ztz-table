@@ -95,7 +95,7 @@ const tableData = reactive([
 export const crudQueryDemoCode = `<template>
   <ztz-table
     :columns="columns"
-    :data="fetchTableDataApi"
+    :data="pageListApi"
     :pagination="pagination"
     list-key="content"
     total-key="total"
@@ -118,21 +118,17 @@ const pagination = reactive({
   pageSize: 2,
 });
 
-// 请求表格数据列表
-const fetchTableDataApi = () => {
-  console.log('获取表格数据列表参数：', params);
-  // 使用定时器模拟Ajax请求
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      // 模拟后端接口返回数据
-      resolve({
-        total: 6,
-        content: [
-          { date: '2021-03-05', address: \`北京（\${Math.random()}）\` },
-          { date: '2021-03-06', address: \`上海（\${Math.random()}）\` },
-        ],
-      });
-    }, 1200);
+// 用定时器模拟Ajax异步请求
+const asyncTask = (data) => new Promise((resolve) => { setTimeout(() => { resolve(data); }, 1500 + Math.random() * 1500); });
+// 表格分页列表接口
+const pageListApi = (params) => {
+  console.log('表格分页列表接口请求参数：', params);
+  return asyncTask({
+    total: 6,
+    content: [
+      { date: '2021-03-05', address: \`北京（\${Math.random()}）\` },
+      { date: '2021-03-06', address: \`上海（\${Math.random()}）\` },
+    ],
   });
 };
 </script>\n`;
@@ -156,7 +152,7 @@ export const crudQueryByParamsDemoCode = `<template>
   </el-form>
   <ztz-table
     :columns="columns"
-    :data="fetchTableDataApi"
+    :data="pageListApi"
     :query-params="queryParams"
     ref="ztzTableRef"
   />
@@ -179,21 +175,17 @@ const queryParams = reactive({
   address: '',
 });
 
-// 请求表格数据列表
-const fetchTableDataApi = (params) => {
-  console.log('获取表格数据列表参数：', params);
-  // 使用定时器模拟Ajax请求
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      // 模拟后端接口返回数据
-      resolve({
-        total: 6,
-        content: [
-          { date: '2021-03-05', address: \`北京（\${Math.random()}）\` },
-          { date: '2021-03-06', address: \`上海（\${Math.random()}）\` },
-        ],
-      });
-    }, 1200);
+// 用定时器模拟Ajax异步请求
+const asyncTask = (data) => new Promise((resolve) => { setTimeout(() => { resolve(data); }, 1500 + Math.random() * 1500); });
+// 表格分页列表接口
+const pageListApi = (params) => {
+  console.log('表格分页列表接口请求参数：', params);
+  return asyncTask({
+    total: 6,
+    content: [
+      { date: '2021-03-05', address: \`北京（\${Math.random()}）\` },
+      { date: '2021-03-06', address: \`上海（\${Math.random()}）\` },
+    ],
   });
 };
 </script>\n`;
@@ -213,7 +205,7 @@ export const crudQueryByDynamicParamsDemoCode = `<template>
   </el-form>
   <ztz-table
     :columns="columns"
-    :data="fetchTableDataApi"
+    :data="pageListApi"
     :query-params="queryParams"
     ref="ztzTableRef"
     dynamic
@@ -237,21 +229,17 @@ const queryParams = reactive({
   address: '',
 });
 
-// 请求表格数据列表
-const fetchTableDataApi = (params) => {
-  console.log('获取表格数据列表参数：', params);
-  // 使用定时器模拟Ajax请求
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      // 模拟后端接口返回数据
-      resolve({
-        total: 6,
-        content: [
-          { date: '2021-03-05', address: \`北京（\${Math.random()}）\` },
-          { date: '2021-03-06', address: \`上海（\${Math.random()}）\` },
-        ],
-      });
-    }, 1200);
+// 用定时器模拟Ajax异步请求
+const asyncTask = (data) => new Promise((resolve) => { setTimeout(() => { resolve(data); }, 1500 + Math.random() * 1500); });
+// 表格分页列表接口
+const pageListApi = (params) => {
+  console.log('表格分页列表接口请求参数：', params);
+  return asyncTask({
+    total: 6,
+    content: [
+      { date: '2021-03-05', address: \`北京（\${Math.random()}）\` },
+      { date: '2021-03-06', address: \`上海（\${Math.random()}）\` },
+    ],
   });
 };
 </script>\n`;
@@ -261,7 +249,7 @@ export const crudDeleteDemoCode = `<template>
   <ztz-table
     :crud="crud"
     :columns="columns"
-    :data="fetchTableDataApi"
+    :data="pageListApi"
   />
 </template>
 
@@ -274,36 +262,22 @@ const columns = reactive([
   { label: '操作', width: 80 },
 ]);
 
-// 请求表格数据列表
-const fetchTableDataApi = (params) => {
-  console.log('获取表格数据列表参数：', params);
-  // 使用定时器模拟Ajax请求
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      // 模拟后端接口返回数据
-      resolve({
-        total: 6,
-        content: [
-          { date: '2021-03-05', address: \`北京（\${Math.random()}）\` },
-          { date: '2021-03-06', address: \`上海（\${Math.random()}）\` },
-        ],
-      });
-    }, 1200);
+// 用定时器模拟Ajax异步请求
+const asyncTask = (data) => new Promise((resolve) => { setTimeout(() => { resolve(data); }, 1500 + Math.random() * 1500); });
+
+// 删除接口
+const deleteApi = (params) => { console.log('删除接口请求参数：', params); return asyncTask(); };
+// 表格分页列表接口
+const pageListApi = (params) => {
+  console.log('表格分页列表接口请求参数：', params);
+  return asyncTask({
+    total: 6,
+    content: [
+      { date: '2021-03-05', address: \`北京（\${Math.random()}）\` },
+      { date: '2021-03-06', address: \`上海（\${Math.random()}）\` },
+    ],
   });
 };
-
-// 删除接口API
-const deleteApi = (params) => {
-  console.log('删除请求参数：', params);
-  // 使用定时器模拟Ajax请求
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      // 模拟后端接口返回数据
-      resolve(null);
-    }, 1200);
-  });
-};
-
 // CRUD配置
 const crud = reactive({
   delete: {
@@ -318,7 +292,7 @@ export const crudAddDemoCode = `<template>
   <ztz-table
     :crud="crud"
     :columns="columns"
-    :data="fetchTableDataApi"
+    :data="pageListApi"
     ref="ztzTableRef"
   />
 </template>
@@ -335,33 +309,20 @@ const columns = reactive([
   { prop: 'address', label: '地点' },
 ]);
 
-// 请求表格数据列表
-const fetchTableDataApi = (params) => {
-  console.log('获取表格数据列表参数：', params);
-  // 使用定时器模拟Ajax请求
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      // 模拟后端接口返回数据
-      resolve({
-        total: 6,
-        content: [
-          { date: '2021-03-05', address: \`北京（\${Math.random()}）\` },
-          { date: '2021-03-06', address: \`上海（\${Math.random()}）\` },
-        ],
-      });
-    }, 1200);
-  });
-};
+// 用定时器模拟Ajax异步请求
+const asyncTask = (data) => new Promise((resolve) => { setTimeout(() => { resolve(data); }, 1500 + Math.random() * 1500); });
 
-// 添加接口API
-const addApi = (params) => {
-  console.log('添加请求参数：', params);
-  // 使用定时器模拟Ajax请求
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      // 模拟后端接口返回数据
-      resolve(null);
-    }, 1200);
+// 新增接口
+const addApi = (params) => { console.log('新增接口请求参数：', params); return asyncTask(); };
+// 表格分页列表接口
+const pageListApi = (params) => {
+  console.log('表格分页列表接口请求参数：', params);
+  return asyncTask({
+    total: 6,
+    content: [
+      { date: '2021-03-05', address: \`北京（\${Math.random()}）\` },
+      { date: '2021-03-06', address: \`上海（\${Math.random()}）\` },
+    ],
   });
 };
 
@@ -426,7 +387,7 @@ export const crudEditDemoCode = `<template>
   <ztz-table
     :crud="crud"
     :columns="columns"
-    :data="fetchTableDataApi"
+    :data="pageListApi"
   />
 </template>
 
@@ -434,51 +395,29 @@ export const crudEditDemoCode = `<template>
 import { reactive } from 'vue';
 import EditFormComponent from './edit-form-component.vue';
 
+// 表格配置
 const columns = reactive([
   { prop: 'date', label: '时间', width: '180' },
   { prop: 'address', label: '地点' },
   { label: '操作', width: 80 },
 ]);
 
-// 请求表格数据列表
-const fetchTableDataApi = (params) => {
-  console.log('获取表格数据列表参数：', params);
-  // 使用定时器模拟Ajax请求
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      // 模拟后端接口返回数据
-      resolve({
-        total: 6,
-        content: [
-          { date: '2021-03-05', address: \`北京（\${Math.random()}）\` },
-          { date: '2021-03-06', address: \`上海（\${Math.random()}）\` },
-        ],
-      });
-    }, 1200);
-  });
-};
+// 用定时器模拟Ajax异步请求
+const asyncTask = (data) => new Promise((resolve) => { setTimeout(() => { resolve(data); }, 1500 + Math.random() * 1500); });
 
-// 修改接口API
-const editApi = (params) => {
-  console.log('修改请求参数：', params);
-  // 使用定时器模拟Ajax请求
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      // 模拟后端接口返回数据
-      resolve(null);
-    }, 1200);
-  });
-};
-
-// 详情接口API
-const detailApi = (params) => {
-  console.log('详情请求参数：', params);
-  // 使用定时器模拟Ajax请求
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      // 模拟后端接口返回数据
-      resolve(null);
-    }, 1200);
+// 修改接口
+const editApi = (params) => { console.log('修改接口请求参数：', params); return asyncTask(); };
+// 详情接口
+const detailApi = (params) => { console.log('详情接口请求参数：', params); return asyncTask(); };
+// 表格分页列表接口
+const pageListApi = (params) => {
+  console.log('表格分页列表接口请求参数：', params);
+  return asyncTask({
+    total: 6,
+    content: [
+      { date: '2021-03-05', address: \`北京（\${Math.random()}）\` },
+      { date: '2021-03-06', address: \`上海（\${Math.random()}）\` },
+    ],
   });
 };
 
@@ -551,5 +490,104 @@ defineExpose({
   getFormRef: () => formRef.value,
   // 获取表单模型
   getFormModel: () => formEntity,
+});
+</script>\n`
+
+/************ CRUD-完整功能 ************/
+export const crudFullDemoCode = `<template>
+  <el-form :model="queryParams" label-width="54px" inline>
+    <el-form-item label="时间">
+      <el-date-picker
+        v-model="queryParams.date"
+        type="date"
+      />
+    </el-form-item>
+    <el-form-item label="地点">
+      <el-input v-model="queryParams.address" />
+    </el-form-item>
+    <el-form-item>
+      <el-button @click="ztzTableRef.refreshTable({ resetPageNum: true, resetQueryParams: true })">重置</el-button>
+      <el-button @click="ztzTableRef.refreshTable({ resetPageNum: true })" type="primary">搜索</el-button>
+    </el-form-item>
+  </el-form>
+  <div>
+    <el-button @click="ztzTableRef.showAddDialog()">添加</el-button>
+  </div>
+  <ztz-table
+    :crud="crud"
+    :columns="columns"
+    :data="pageListApi"
+    :pagination="pagination"
+    :query-params="queryParams"
+    ref="ztzTableRef"
+    list-key="content"
+    total-key="total"
+  ></ztz-table>
+</template>
+
+<script setup>
+import { ref, reactive } from 'vue';
+import EditFormComponent from './edit-form-component.vue';
+
+const ztzTableRef = ref(null);
+
+// 表格配置
+const columns = reactive([
+  { prop: 'date', label: '时间', width: '180' },
+  { prop: 'address', label: '地点' },
+  { label: '操作', width: 150 },
+]);
+
+// 分页配置
+const pagination = reactive({
+  // 当前页
+  pageNum: 1,
+  // 分页数
+  pageSize: 2,
+});
+
+// 搜索条件
+const queryParams = reactive({
+  date: '',
+  address: '',
+});
+
+// 用定时器模拟Ajax异步请求
+const asyncTask = (data) => new Promise((resolve) => { setTimeout(() => { resolve(data); }, 1500 + Math.random() * 1500); });
+
+// 新增接口
+const addApi = (params) => { console.log('新增接口请求参数：', params); return asyncTask(); };
+// 修改接口
+const editApi = (params) => { console.log('修改接口请求参数：', params); return asyncTask(); };
+// 删除接口
+const deleteApi = (params) => { console.log('删除接口请求参数：', params); return asyncTask(); };
+// 详情接口
+const detailApi = (params) => { console.log('详情接口请求参数：', params); return asyncTask(); };
+// 表格分页列表接口
+const pageListApi = (params) => {
+  console.log('表格分页列表接口请求参数：', params);
+  return asyncTask({
+    total: 6,
+    content: [
+      { date: '2021-03-05', address: \`北京（\${Math.random()}）\` },
+      { date: '2021-03-06', address: \`上海（\${Math.random()}）\` },
+    ],
+  });
+};
+
+// CRUD配置
+const crud = reactive({
+  add: {
+    api: addApi,
+    formComponent: EditFormComponent,
+  },
+  edit: {
+    api: editApi,
+    detailApi,
+    formComponent: EditFormComponent,
+  },
+  delete: {
+    api: deleteApi,
+  },
 });
 </script>\n`

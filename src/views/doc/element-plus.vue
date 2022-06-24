@@ -113,7 +113,7 @@
       </el-card>
       <el-card header="CRUD-列表查询-根据搜索条件动态变化刷新表格">
         <div>
-          <p>增加 <strong>dynamic</strong> 属性即可，监听参数变化的输入是比较频繁的，内部默认有350ms的防抖策略，还是推荐自行配置使用ajax取消重复请求功能。</p>
+          <p>增加 <strong>dynamic</strong> 属性即可，监听参数变化的输入是比较频繁的，内部默认有250ms的防抖策略，还是推荐自行配置使用ajax取消重复请求功能。</p>
           <el-form :model="queryParams" label-width="54px" inline>
             <el-form-item label="时间">
               <el-date-picker
@@ -201,7 +201,7 @@
           </el-collapse>
         </div>
       </el-card>
-      <el-card header="CRUD-修加功能">
+      <el-card header="CRUD-修改功能">
         <div>
           修改功能实现方式基本和新增类似。
           <ol>
@@ -229,6 +229,46 @@
           </el-collapse>
         </div>
       </el-card>
+      <el-card header="CRUD-全部功能示例">
+        <div>
+          <el-form :model="queryParams" label-width="54px" inline>
+            <el-form-item label="时间">
+              <el-date-picker
+                v-model="queryParams.date"
+                type="date"
+              />
+            </el-form-item>
+            <el-form-item label="地点">
+              <el-input v-model="queryParams.address" />
+            </el-form-item>
+            <el-form-item>
+              <el-button @click="ztzTableFullRef.refreshTable({ resetPageNum: true, resetQueryParams: true })">重置</el-button>
+              <el-button @click="ztzTableFullRef.refreshTable({ resetPageNum: true })" type="primary">搜索</el-button>
+            </el-form-item>
+          </el-form>
+          <el-button @click="ztzTableFullRef.showAddDialog()">添加</el-button>
+          <ztz-table
+            :crud="crud"
+            :columns="columns5"
+            :data="pageListApi"
+            :pagination="pagination"
+            :query-params="queryParams"
+            ref="ztzTableFullRef"
+            list-key="content"
+            total-key="total"
+          ></ztz-table>
+        </div>
+        <div class="gap24">
+          <el-collapse>
+            <el-collapse-item title="table - 查看代码" name="1">
+              <code-box :code="crudFullDemoCode"></code-box>
+            </el-collapse-item>
+            <el-collapse-item title="form-component.vue - 查看代码" name="2">
+              <code-box :code="crudEditFormComponentDemoCode"></code-box>
+            </el-collapse-item>
+          </el-collapse>
+        </div>
+      </el-card>
     </el-space>
   </div>
 </template>
@@ -249,6 +289,7 @@ import {
   crudAddFormComponentDemoCode,
   crudEditDemoCode,
   crudEditFormComponentDemoCode,
+  crudFullDemoCode,
 } from '@/views/doc/code-str';
 import AddFormComponent from './add-form-component.vue';
 import EditFormComponent from './edit-form-component.vue';
@@ -288,6 +329,12 @@ const columns4 = reactive([
   { label: '操作', width: 80 },
 ]);
 
+const columns5 = reactive([
+  { prop: 'date', label: '时间', width: '180' },
+  { prop: 'address', label: '地点' },
+  { label: '操作', width: 150 },
+]);
+
 const tableData = reactive([
   { date: '2021-03-05', address: '北京' },
   { date: '2021-03-06', address: '上海' },
@@ -295,6 +342,7 @@ const tableData = reactive([
 
 const ztzTableRef = ref(null);
 const ztzTableAddRef = ref(null);
+const ztzTableFullRef = ref(null);
 
 // 请求表格数据列表
 const fetchTableDataApi = (params) => {
@@ -375,6 +423,35 @@ const editCRUD = reactive({
   api: editApi,
   detailApi: editApi,
   formComponent: EditFormComponent,
+});
+
+// 用定时器模拟Ajax异步请求
+const asyncTask = (data) => () => new Promise((resolve) => { setTimeout(() => { resolve(data); }, 1500 + Math.random() * 1500); });
+
+// 详情接口
+const detailApi = asyncTask(null);
+// 表格分页列表接口
+const pageListApi = asyncTask({
+  total: 6,
+  content: [
+    { date: '2021-03-05', address: `北京（${Math.random()}）` },
+    { date: '2021-03-06', address: `上海（${Math.random()}）` },
+  ],
+});
+
+const crud = reactive({
+  add: {
+    api: addApi,
+    formComponent: EditFormComponent,
+  },
+  edit: {
+    api: addApi,
+    detailApi,
+    formComponent: EditFormComponent,
+  },
+  delete: {
+    api: deleteApi,
+  },
 });
 
 </script>
