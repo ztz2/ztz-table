@@ -207,7 +207,6 @@ export const crudQueryByDynamicParamsDemoCode = `<template>
     :columns="columns"
     :data="pageListApi"
     :query-params="queryParams"
-    ref="ztzTableRef"
     dynamic
   />
 </template>
@@ -219,9 +218,6 @@ const columns = reactive([
   { prop: 'date', label: '时间', width: '180' },
   { prop: 'address', label: '地点' },
 ]);
-
-// 表格实例
-const ztzTableRef = ref(null);
 
 // 搜索条件
 const queryParams = reactive({
