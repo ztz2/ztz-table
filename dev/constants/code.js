@@ -4,7 +4,7 @@ export const importSideCode = `<template>
 
 <script setup>
 import { reactive } from 'vue';
-import { ZtzTable } from 'ztz-table/element-plus';
+import { ZtzTable } from 'ztz-table';
 
 const columns = reactive([
   { prop: 'date', label: '时间', width: '180' },

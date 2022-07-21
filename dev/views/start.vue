@@ -35,7 +35,7 @@ $ npm install ztz-table --save
 # cnpm
 $ cnpm install ztz-table --save`,
       importAllCode: `import { createApp } from 'vue';
-import ZtzTableInstall from 'ztz-table/element-plus';
+import ZtzTableInstall from 'ztz-table';
 import App from './App.vue'
 
 const app = createApp(App)

@@ -1,0 +1,42 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+    "declaration": true,
+    "target": "ESNext",
+    "module": "esnext",
+    "sourceMap": false,
+    "moduleResolution": "node",
+    "strict": true,
+    "jsx": "preserve",
+    "noUnusedLocals": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "removeComments": false,
+    "isolatedModules": true,
+    "composite": false,
+    "noEmit": false,
+    "rootDir": "src",
+    "skipLibCheck": true,
+    "allowJs": true,
+    "importsNotUsedAsValues": "preserve"
+  },
+  "include": [
+    "src",
+  ],
+  "exclude": [
+    "src/**/*.test.tsx",
+    "src/**/*.spec.tsx",
+    "src/**/*.stories.tsx",
+    "src/setupTests.ts",
+    "node_modules/**",
+    "*.d.ts"
+  ],
+  "plugins": [
+    // Transform paths in output .js files
+    { "transform": "typescript-transform-paths" },
+
+    // Transform paths in output .d.ts files (Include this line if you output declarations files)
+    { "transform": "typescript-transform-paths", "afterDeclarations": true }
+  ]
+}

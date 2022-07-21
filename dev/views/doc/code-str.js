@@ -523,7 +523,7 @@ export const crudFullDemoCode = `<template>
 
 <script setup>
 import { ref, reactive } from 'vue';
-import EditFormComponent from './edit-form-component.vue';
+import EditFormComponent from './form-component.vue';
 
 const ztzTableRef = ref(null);
 

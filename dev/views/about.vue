@@ -9,7 +9,8 @@
     </p>
     <h2>Feature</h2>
     <ul>
-      <ol><CheckSquareOutlined /> 表格快速配置</ol>
+      <ol><CheckSquareOutlined /> 基于TS开发</ol>
+      <ol><CheckSquareOutlined /> 自动化测试80%覆盖率，核心功能全部覆盖</ol>
       <ol><CheckSquareOutlined /> 支持静态表格，和动态接口数据生成</ol>
       <ol><CheckSquareOutlined /> 支持分页</ol>
       <ol><CheckSquareOutlined /> 支持自定义 prop 列名</ol>
