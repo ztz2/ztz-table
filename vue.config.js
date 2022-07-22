@@ -1,7 +1,10 @@
 const path = require('path');
 const { defineConfig } = require('@vue/cli-service');
+// eslint-disable-next-line
 const AutoImport = require('unplugin-auto-import/webpack');
+// eslint-disable-next-line
 const Components = require('unplugin-vue-components/webpack');
+// eslint-disable-next-line
 const { ElementPlusResolver } = require('unplugin-vue-components/resolvers');
 
 function resolve(p) {
@@ -15,7 +18,7 @@ module.exports = defineConfig({
     resolve: {
       alias: {
         '@': resolve('dev'),
-      }
+      },
     },
     plugins: [
       AutoImport({
@@ -24,7 +27,7 @@ module.exports = defineConfig({
       Components({
         resolvers: [ElementPlusResolver()],
       }),
-    ]
+    ],
   },
   chainWebpack: (config) => {
     config
