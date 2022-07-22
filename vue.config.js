@@ -15,7 +15,7 @@ module.exports = defineConfig({
     resolve: {
       alias: {
         '@': resolve('dev'),
-      },
+      }
     },
     plugins: [
       AutoImport({
@@ -24,7 +24,7 @@ module.exports = defineConfig({
       Components({
         resolvers: [ElementPlusResolver()],
       }),
-    ],
+    ]
   },
   chainWebpack: (config) => {
     config

@@ -17,7 +17,7 @@
 
 <script>
 import CodeBox from '@/components/code-box/src/index.vue';
-import { importSideCode } from '@/constants/code';
+import { importSideCode } from './doc/code-str';
 
 export default {
   name: 'start',

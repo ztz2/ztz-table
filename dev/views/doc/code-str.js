@@ -1,4 +1,23 @@
 /* eslint-disable  */
+export const importSideCode = `<template>
+  <ZtzTable :columns="columns" :data="tableData"></ZtzTable>
+</template>
+
+<script lang="ts" setup>
+import { reactive } from 'vue';
+import { ZtzTable, TableColumn, TableDataRow } from 'ztz-table';
+
+const columns = reactive<Array<TableDataRow>>([
+  { prop: 'date', label: '时间', width: '180' },
+  { prop: 'address', label: '地点' },
+]);
+
+const tableData = reactive<Array<TableColumn>>([
+  { date: '2021-03-05', address: '北京' },
+  { date: '2021-03-06', address: '上海' },
+]);
+</script>\n`;
+
 // 基本使用
 export const baseDemoCode = `<template>
   <ztz-table :columns="columns" :data="tableData"></ztz-table>

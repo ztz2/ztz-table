@@ -1,7 +1,9 @@
 <template>
   <div class="code-box">
     <div class="code-box__content">
-      <div><pre v-highlight><code class="typescript">{{ code }}</code></pre></div>
+      <div>
+        <pre class="language-css"><code v-html="highlighterCode"></code></pre>
+      </div>
     </div>
     <div v-if="showCopy && code && code.trim().length > 0" class="code-box__handle">
       <el-icon ref="copyBtnRef" title="复制代码"><CopyDocument /></el-icon>
@@ -9,9 +11,11 @@
   </div>
 </template>
 <script>
+import Prism from 'prismjs';
 import ClipboardJS from 'clipboard';
 import { ElMessage } from 'element-plus';
 import { CopyDocument } from '@element-plus/icons-vue';
+import 'prismjs/themes/prism-tomorrow.css';
 
 export default {
   name: 'code-box',
@@ -28,12 +32,16 @@ export default {
   data() {
     return {
       clipboard: null,
+      highlighterCode: '',
     };
   },
   watch: {
     code: {
       immediate: true,
       handler(code) {
+        this.$nextTick(() => {
+          this.highlighterCode = Prism.highlight(code, Prism.languages.javascript, 'jsx');
+        });
         if (code) {
           this.$nextTick(() => {
             const { copyBtnRef } = this.$refs;
