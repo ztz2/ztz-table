@@ -46,6 +46,11 @@ export const getObjectValue = (target: any, path = '') => {
   return res;
 };
 
+/**
+const a = { label: 1 }
+const b = { label: 2, c: 20 }
+mergeDifference(a, b) => a === { label: 1, c: 20 }
+ */
 export function mergeDifference(b: AnyObject = {}, s: AnyObject = {}) {
   if (checkType(b, 'Object') && checkType(s, 'Object')) {
     for (const [k, v] of Object.entries(s)) {

@@ -341,7 +341,7 @@ const tableData = reactive([
   { date: '2021-03-06', address: '上海' },
 ]);
 
-const ztzTableRef = ref<ZtzTable>(null);
+const ztzTableRef = ref(null);
 const ztzTableAddRef = ref(null);
 const ztzTableFullRef = ref(null);
 

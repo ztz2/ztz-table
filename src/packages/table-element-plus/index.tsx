@@ -204,12 +204,11 @@ export default defineComponent({
     // 表格数据赋值，一定要使用这个方法
     const setTableData = (data: Array<TableDataRow> = []) => {
       data.forEach((p: TableDataRow) => {
-        const o = new TableDataRowOptions();
-        if (p._options) {
-          merge(p._options, o);
+        const tableDataRowOptions = new TableDataRowOptions();
+        if (p._options && checkType(p._options, 'Object')) {
+          p._options?.uid == null && merge(p._options, tableDataRowOptions);
         } else {
-          // @ts-ignore 对源数据扩展
-          p._options = o;
+          p._options = tableDataRowOptions;
         }
       });
       tableDataRef.value = data;

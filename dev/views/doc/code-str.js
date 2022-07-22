@@ -7,12 +7,12 @@ export const importSideCode = `<template>
 import { reactive } from 'vue';
 import { ZtzTable, TableColumn, TableDataRow } from 'ztz-table';
 
-const columns = reactive<Array<TableDataRow>>([
+const columns = reactive<Array<TableColumn>>([
   { prop: 'date', label: '时间', width: '180' },
   { prop: 'address', label: '地点' },
 ]);
 
-const tableData = reactive<Array<TableColumn>>([
+const tableData = reactive<Array<TableDataRow>>([
   { date: '2021-03-05', address: '北京' },
   { date: '2021-03-06', address: '上海' },
 ]);
@@ -27,12 +27,12 @@ export const baseDemoCode = `<template>
 import { reactive } from 'vue';
 import { TableColumn, TableDataRow } from 'ztz-table';
 
-const columns = reactive<Array<TableDataRow>>([
+const columns = reactive<Array<TableColumn>>([
   { prop: 'date', label: '时间', width: '180' },
   { prop: 'address', label: '地点' },
 ]);
 
-const tableData = reactive<Array<TableColumn>>([
+const tableData = reactive<Array<TableDataRow>>([
   { date: '2021-03-05', address: '北京' },
   { date: '2021-03-06', address: '上海' },
 ]);
