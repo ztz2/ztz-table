@@ -1,7 +1,7 @@
 <template>
   <div class="code-box">
     <div class="code-box__content">
-      <div><pre v-highlight><code class="javascript">{{ code }}</code></pre></div>
+      <div><pre v-highlight><code class="typescript">{{ code }}</code></pre></div>
     </div>
     <div v-if="showCopy && code && code.trim().length > 0" class="code-box__handle">
       <el-icon ref="copyBtnRef" title="复制代码"><CopyDocument /></el-icon>

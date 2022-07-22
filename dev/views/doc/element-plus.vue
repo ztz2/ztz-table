@@ -293,6 +293,7 @@ import {
 } from '@/views/doc/code-str';
 import AddFormComponent from './add-form-component.vue';
 import EditFormComponent from './edit-form-component.vue';
+import { ZtzTable } from '../../../src';
 
 const columns = reactive([
   { prop: 'date', label: '时间', width: '180' },
@@ -340,7 +341,7 @@ const tableData = reactive([
   { date: '2021-03-06', address: '上海' },
 ]);
 
-const ztzTableRef = ref(null);
+const ztzTableRef = ref<ZtzTable>(null);
 const ztzTableAddRef = ref(null);
 const ztzTableFullRef = ref(null);
 

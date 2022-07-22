@@ -35,15 +35,15 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { reactive, ref } from 'vue';
 import {
   addApi,
   editApi,
   pageApi,
   deleteApi,
-} from '@/api';
-import ZtzTable from '@/packages/table-element-plus/src/index.vue';
+} from '../../api';
+import { ZtzTable, TableColumn } from '../../../src';
 
 import AddForm from './AddForm.vue';
 
@@ -66,7 +66,7 @@ const crud = reactive({
 //   pageSize: 100,
 //   pageNum: 2,
 // });
-const columns = reactive([
+const columns = reactive<Array<TableColumn>>([
   { prop: 'date', label: 'Date' },
   { prop: 'name', label: 'name' },
   { label: '操作' },

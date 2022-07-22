@@ -4,15 +4,16 @@ export const baseDemoCode = `<template>
   <ztz-table :columns="columns" :data="tableData"></ztz-table>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { reactive } from 'vue';
+import { TableColumn, TableDataRow } from 'ztz-table';
 
-const columns = reactive([
+const columns = reactive<Array<TableDataRow>>([
   { prop: 'date', label: '时间', width: '180' },
   { prop: 'address', label: '地点' },
 ]);
 
-const tableData = reactive([
+const tableData = reactive<Array<TableColumn>>([
   { date: '2021-03-05', address: '北京' },
   { date: '2021-03-06', address: '上海' },
 ]);
@@ -28,10 +29,11 @@ export const templateDemoCode = `<template>
   </ztz-table>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { reactive } from 'vue';
+import { TableColumn } from 'ztz-table';
 
-const tableData = reactive([
+const tableData = reactive<Array<TableColumn>>([
   { date: '2021-03-05', address: '北京' },
   { date: '2021-03-06', address: '上海' },
 ]);
@@ -42,11 +44,12 @@ export const customHeaderDemoCode = `<template>
   <ztz-table :columns="columns" :data="tableData"></ztz-table>
 </template>
 
-<script setup>
-import { ElTag } from 'element-plus';
+<script lang="ts" setup>
 import { h, reactive } from 'vue';
+import { ElTag } from 'element-plus';
+import { TableColumn, TableDataRow } from 'ztz-table';
 
-const columns = reactive([
+const columns = reactive<Array<TableColumn>>([
   {
     prop: 'date',
     label: '时间',
@@ -58,7 +61,7 @@ const columns = reactive([
   { prop: 'address', label: '地点' },
 ]);
 
-const tableData = reactive([
+const tableData = reactive<Array<TableDataRow>>([
   { date: '2021-03-05', address: '北京' },
   { date: '2021-03-06', address: '上海' },
 ]);
@@ -69,11 +72,12 @@ export const customRenderDemoCode = `<template>
   <ztz-table :columns="columns" :data="tableData"></ztz-table>
 </template>
 
-<script setup>
-import { ElTag } from 'element-plus';
+<script lang="ts" setup>
 import { h, reactive } from 'vue';
+import { ElTag } from 'element-plus';
+import { TableColumn, TableDataRow } from 'ztz-table';
 
-const columns = reactive([
+const columns = reactive<Array<TableColumn>>([
   {
     prop: 'date',
     label: '时间',
@@ -85,7 +89,7 @@ const columns = reactive([
   { prop: 'address', label: '地点' },
 ]);
 
-const tableData = reactive([
+const tableData = reactive<Array<TableDataRow>>([
   { date: '2021-03-05', address: '北京' },
   { date: '2021-03-06', address: '上海' },
 ]);
@@ -102,10 +106,11 @@ export const crudQueryDemoCode = `<template>
   />
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { reactive } from 'vue';
+import { TableColumn, TableDataRow } from 'ztz-table';
 
-const columns = reactive([
+const columns = reactive<Array<TableColumn>>([
   { prop: 'date', label: '时间', width: '180' },
   { prop: 'address', label: '地点' },
 ]);
@@ -119,16 +124,16 @@ const pagination = reactive({
 });
 
 // 用定时器模拟Ajax异步请求
-const asyncTask = (data) => new Promise((resolve) => { setTimeout(() => { resolve(data); }, 1500 + Math.random() * 1500); });
+const asyncTask = (data: any) => new Promise((resolve) => { setTimeout(() => { resolve(data); }, 1500 + Math.random() * 1500); });
 // 表格分页列表接口
-const pageListApi = (params) => {
+const pageListApi = (params: any) => {
   console.log('表格分页列表接口请求参数：', params);
   return asyncTask({
     total: 6,
     content: [
       { date: '2021-03-05', address: \`北京（\${Math.random()}）\` },
       { date: '2021-03-06', address: \`上海（\${Math.random()}）\` },
-    ],
+    ] as Array<TableDataRow>,
   });
 };
 </script>\n`;
@@ -158,10 +163,11 @@ export const crudQueryByParamsDemoCode = `<template>
   />
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { ref, reactive } from 'vue';
+import { TableColumn, TableDataRow } from 'ztz-table';
 
-const columns = reactive([
+const columns = reactive<Array<TableColumn>>([
   { prop: 'date', label: '时间', width: '180' },
   { prop: 'address', label: '地点' },
 ]);
@@ -176,16 +182,16 @@ const queryParams = reactive({
 });
 
 // 用定时器模拟Ajax异步请求
-const asyncTask = (data) => new Promise((resolve) => { setTimeout(() => { resolve(data); }, 1500 + Math.random() * 1500); });
+const asyncTask = (data: any) => new Promise((resolve) => { setTimeout(() => { resolve(data); }, 1500 + Math.random() * 1500); });
 // 表格分页列表接口
-const pageListApi = (params) => {
+const pageListApi = (params: any) => {
   console.log('表格分页列表接口请求参数：', params);
   return asyncTask({
     total: 6,
     content: [
       { date: '2021-03-05', address: \`北京（\${Math.random()}）\` },
       { date: '2021-03-06', address: \`上海（\${Math.random()}）\` },
-    ],
+    ] as Array<TableDataRow>,
   });
 };
 </script>\n`;
@@ -211,10 +217,11 @@ export const crudQueryByDynamicParamsDemoCode = `<template>
   />
 </template>
 
-<script setup>
-import { ref, reactive } from 'vue';
+<script lang="ts" setup>
+import { reactive } from 'vue';
+import { TableColumn, TableDataRow } from 'ztz-table';
 
-const columns = reactive([
+const columns = reactive<Array<TableColumn>>([
   { prop: 'date', label: '时间', width: '180' },
   { prop: 'address', label: '地点' },
 ]);
@@ -226,16 +233,16 @@ const queryParams = reactive({
 });
 
 // 用定时器模拟Ajax异步请求
-const asyncTask = (data) => new Promise((resolve) => { setTimeout(() => { resolve(data); }, 1500 + Math.random() * 1500); });
+const asyncTask = (data: any) => new Promise((resolve) => { setTimeout(() => { resolve(data); }, 1500 + Math.random() * 1500); });
 // 表格分页列表接口
-const pageListApi = (params) => {
+const pageListApi = (params: any) => {
   console.log('表格分页列表接口请求参数：', params);
   return asyncTask({
     total: 6,
     content: [
       { date: '2021-03-05', address: \`北京（\${Math.random()}）\` },
       { date: '2021-03-06', address: \`上海（\${Math.random()}）\` },
-    ],
+    ] as Array<TableDataRow>,
   });
 };
 </script>\n`;
@@ -249,36 +256,42 @@ export const crudDeleteDemoCode = `<template>
   />
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { reactive } from 'vue';
+import {
+  ICrud,
+  ICrudDelete,
+  TableColumn,
+  TableDataRow,
+} from 'ztz-table';
 
-const columns = reactive([
+const columns = reactive<Array<TableColumn>>([
   { prop: 'date', label: '时间', width: '180' },
   { prop: 'address', label: '地点' },
   { label: '操作', width: 80 },
 ]);
 
 // 用定时器模拟Ajax异步请求
-const asyncTask = (data) => new Promise((resolve) => { setTimeout(() => { resolve(data); }, 1500 + Math.random() * 1500); });
+const asyncTask = (data: any) => new Promise((resolve) => { setTimeout(() => { resolve(data); }, 1500 + Math.random() * 1500); });
 
 // 删除接口
-const deleteApi = (params) => { console.log('删除接口请求参数：', params); return asyncTask(); };
+const deleteApi = (params: any) => { console.log('删除接口请求参数：', params); return asyncTask(); };
 // 表格分页列表接口
-const pageListApi = (params) => {
+const pageListApi = (params: any) => {
   console.log('表格分页列表接口请求参数：', params);
   return asyncTask({
     total: 6,
     content: [
       { date: '2021-03-05', address: \`北京（\${Math.random()}）\` },
       { date: '2021-03-06', address: \`上海（\${Math.random()}）\` },
-    ],
+    ] as Array<TableDataRow>,
   });
 };
 // CRUD配置
-const crud = reactive({
+const crud = reactive<ICrud>({
   delete: {
     api: deleteApi,
-  },
+  } as ICrudDelete,
 });
 </script>\n`;
 
@@ -293,41 +306,47 @@ export const crudAddDemoCode = `<template>
   />
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { ref, reactive } from 'vue';
+import {
+  ICrud,
+  ICrudAdd,
+  TableColumn,
+  TableDataRow,
+} from 'ztz-table';
 import AddFormComponent from './add-form-component.vue';
 
 // 表格实例
 const ztzTableRef = ref(null);
 
-const columns = reactive([
+const columns = reactive<Array<TableColumn>>([
   { prop: 'date', label: '时间', width: '180' },
   { prop: 'address', label: '地点' },
 ]);
 
 // 用定时器模拟Ajax异步请求
-const asyncTask = (data) => new Promise((resolve) => { setTimeout(() => { resolve(data); }, 1500 + Math.random() * 1500); });
+const asyncTask = (data: any) => new Promise((resolve) => { setTimeout(() => { resolve(data); }, 1500 + Math.random() * 1500); });
 
 // 新增接口
-const addApi = (params) => { console.log('新增接口请求参数：', params); return asyncTask(); };
+const addApi = (params: any) => { console.log('新增接口请求参数：', params); return asyncTask(); };
 // 表格分页列表接口
-const pageListApi = (params) => {
+const pageListApi = (params: any) => {
   console.log('表格分页列表接口请求参数：', params);
   return asyncTask({
     total: 6,
     content: [
       { date: '2021-03-05', address: \`北京（\${Math.random()}）\` },
       { date: '2021-03-06', address: \`上海（\${Math.random()}）\` },
-    ],
+    ] as Array<TableDataRow>,
   });
 };
 
 // CRUD配置
-const crud = reactive({
+const crud = reactive<ICrud>({
   add: {
     api: addApi,
     formComponent: AddFormComponent,
-  },
+  } as ICrudAdd,
 });
 </script>\n`;
 
@@ -350,7 +369,7 @@ export const crudAddFormComponentDemoCode = `<template>
   </el-form>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import {
   ref,
   reactive,
@@ -387,44 +406,50 @@ export const crudEditDemoCode = `<template>
   />
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { reactive } from 'vue';
+import {
+  ICrud,
+  ICrudEdit,
+  TableColumn,
+  TableDataRow,
+} from 'ztz-table';
 import EditFormComponent from './edit-form-component.vue';
 
 // 表格配置
-const columns = reactive([
+const columns = reactive<Array<TableColumn>>([
   { prop: 'date', label: '时间', width: '180' },
   { prop: 'address', label: '地点' },
   { label: '操作', width: 80 },
 ]);
 
 // 用定时器模拟Ajax异步请求
-const asyncTask = (data) => new Promise((resolve) => { setTimeout(() => { resolve(data); }, 1500 + Math.random() * 1500); });
+const asyncTask = (data: any) => new Promise((resolve) => { setTimeout(() => { resolve(data); }, 1500 + Math.random() * 1500); });
 
 // 修改接口
-const editApi = (params) => { console.log('修改接口请求参数：', params); return asyncTask(); };
+const editApi = (params: any): any => { console.log('修改接口请求参数：', params); return asyncTask(); };
 // 详情接口
-const detailApi = (params) => { console.log('详情接口请求参数：', params); return asyncTask(); };
+const detailApi = (params: any): any => { console.log('详情接口请求参数：', params); return asyncTask(); };
 // 表格分页列表接口
-const pageListApi = (params) => {
+const pageListApi = (params: any) => {
   console.log('表格分页列表接口请求参数：', params);
   return asyncTask({
     total: 6,
     content: [
       { date: '2021-03-05', address: \`北京（\${Math.random()}）\` },
       { date: '2021-03-06', address: \`上海（\${Math.random()}）\` },
-    ],
+    ] as Array<TableDataRow>,
   });
 };
 
 // CRUD配置
-const crud = reactive({
+const crud = reactive<ICrud>({
   edit: {
     api: editApi,
     // 【可选】详情接口API，，当没有详情接口，会把当前单元格数据作为实体
     detailApi,
     formComponent: EditFormComponent,
-  },
+  } as ICrudEdit,
 });
 </script>\n`;
 
@@ -448,7 +473,7 @@ export const crudEditFormComponentDemoCode = `<template>
   </el-form>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import {
   ref,
   reactive,
@@ -521,14 +546,19 @@ export const crudFullDemoCode = `<template>
   ></ztz-table>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { ref, reactive } from 'vue';
+import {
+  ICrud,
+  TableColumn,
+  TableDataRow,
+} from 'ztz-table';
 import EditFormComponent from './form-component.vue';
 
 const ztzTableRef = ref(null);
 
 // 表格配置
-const columns = reactive([
+const columns = reactive<Array<TableColumn>>([
   { prop: 'date', label: '时间', width: '180' },
   { prop: 'address', label: '地点' },
   { label: '操作', width: 150 },
@@ -549,30 +579,30 @@ const queryParams = reactive({
 });
 
 // 用定时器模拟Ajax异步请求
-const asyncTask = (data) => new Promise((resolve) => { setTimeout(() => { resolve(data); }, 1500 + Math.random() * 1500); });
+const asyncTask = (data: any) => new Promise((resolve) => { setTimeout(() => { resolve(data); }, 1500 + Math.random() * 1500); });
 
 // 新增接口
-const addApi = (params) => { console.log('新增接口请求参数：', params); return asyncTask(); };
+const addApi = (params: any) => { console.log('新增接口请求参数：', params); return asyncTask(); };
 // 修改接口
-const editApi = (params) => { console.log('修改接口请求参数：', params); return asyncTask(); };
+const editApi = (params: any) => { console.log('修改接口请求参数：', params); return asyncTask(); };
 // 删除接口
-const deleteApi = (params) => { console.log('删除接口请求参数：', params); return asyncTask(); };
+const deleteApi = (params: any) => { console.log('删除接口请求参数：', params); return asyncTask(); };
 // 详情接口
-const detailApi = (params) => { console.log('详情接口请求参数：', params); return asyncTask(); };
+const detailApi = (params: any) => { console.log('详情接口请求参数：', params); return asyncTask(); };
 // 表格分页列表接口
-const pageListApi = (params) => {
+const pageListApi = (params: any) => {
   console.log('表格分页列表接口请求参数：', params);
   return asyncTask({
     total: 6,
     content: [
       { date: '2021-03-05', address: \`北京（\${Math.random()}）\` },
       { date: '2021-03-06', address: \`上海（\${Math.random()}）\` },
-    ],
+    ] as Array<TableDataRow>,
   });
 };
 
 // CRUD配置
-const crud = reactive({
+const crud = reactive<ICrud>({
   add: {
     api: addApi,
     formComponent: EditFormComponent,
