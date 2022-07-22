@@ -9,26 +9,31 @@
     </p>
     <h2>Feature</h2>
     <ul>
-      <ol><CheckSquareOutlined /> 基于TS开发</ol>
-      <ol><CheckSquareOutlined /> 自动化测试80%覆盖率，核心功能全部覆盖</ol>
-      <ol><CheckSquareOutlined /> 支持静态表格，和动态接口数据生成</ol>
-      <ol><CheckSquareOutlined /> 支持分页</ol>
-      <ol><CheckSquareOutlined /> 支持自定义 prop 列名</ol>
-      <ol><CheckSquareOutlined /> 支持单元格内容以及表头自定义渲染</ol>
-      <ol><CheckSquareOutlined /> 支持对 element-plus table 兼容其 template 语法，同时也可以使用JS配置对象</ol>
-      <ol><CheckSquareOutlined /> CRUD集成，低耦合，基于API，兼容所有项目</ol>
-      <ol><CheckSquareOutlined /> 支持CRUD功能中进行权限控制，精确到行，具体到功能按钮</ol>
+      <ol>💪 基于TS开发</ol>
+      <ol>🧪 自动化测试80%覆盖率，核心功能全部覆盖</ol>
+      <ol>📋 表格快速配置，支持静态表格，和动态接口数据生成</ol>
+      <ol>📃 支持分页</ol>
+      <ol>🖖 支持自定义 prop 列名</ol>
+      <ol>🤟 支持单元格内容以及表头自定义渲染</ol>
+      <ol>✨ 支持对 element-plus table 兼容其 template 语法，同时也可以使用JS配置对象</ol>
+      <ol>⚙️ CRUD集成，低耦合，基于API，兼容所有项目</ol>
+      <ol>🚩 支持CRUD功能中进行权限控制，精确到行，具体到功能按钮</ol>
     </ul>
   </div>
 </template>
 <script setup>
 import { CheckSquareOutlined } from '@ant-design/icons-vue';
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .text-center{
   text-align: center;
 }
-.about p{
-  color: #555!important;
+.about{
+  p{
+    color: #555!important;
+  }
+  ul ol {
+    margin-bottom: 8px;
+  }
 }
 </style>
