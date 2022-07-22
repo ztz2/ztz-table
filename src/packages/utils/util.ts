@@ -1,5 +1,10 @@
-export const getProp = (column: any = {}) => column?.prop ?? column?.dataIndex ?? column?.key;
-export const getLabel = (column: any = {}) => column?.label ?? column?.title ?? column?.name;
+// eslint-disable-next-line
+import { TableColumn } from '../table-element-plus/interface';
+
+type AnyObject = { [propName: string]: any };
+
+export const getProp = (column: TableColumn = {}) => column?.prop ?? column?.dataIndex ?? column?.key;
+export const getLabel = (column: TableColumn = {}) => column?.label ?? column?.title ?? column?.name;
 export const sortCurdVNodeBtn = (vnodeList: any = []) => vnodeList.sort((a: any, b: any) => {
   const v1 = a?.props?.['crud-sort'] ?? a?.props?.crudSort ?? 500;
   const v2 = b?.props?.['crud-sort'] ?? b?.props?.crudSort ?? 500;
@@ -40,3 +45,18 @@ export const getObjectValue = (target: any, path = '') => {
   }
   return res;
 };
+
+export function mergeDifference(b: AnyObject = {}, s: AnyObject = {}) {
+  if (checkType(b, 'Object') && checkType(s, 'Object')) {
+    for (const [k, v] of Object.entries(s)) {
+      if (b.hasOwnProperty(k)) {
+        if (checkType(b[k], 'Object') && checkType(v, 'Object')) {
+          mergeDifference(b[k], v);
+        }
+      } else {
+        b[k] = v;
+      }
+    }
+  }
+  return b;
+}

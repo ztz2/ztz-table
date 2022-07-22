@@ -9,7 +9,6 @@ import {
   h,
   ref,
   watch,
-  VNode,
   computed,
   Fragment,
   watchEffect,
@@ -19,7 +18,6 @@ import {
   useSlots,
   WatchStopHandle,
   PropType,
-  ComponentPublicInstance,
   getCurrentInstance,
 } from 'vue';
 import {
@@ -38,73 +36,96 @@ import {
   getLabel,
   checkType,
   getObjectValue,
-  sortCurdVNodeBtn,
+  sortCurdVNodeBtn, mergeDifference,
 } from '../utils/util';
 
-import { TableCrud, TableRowOptions, TablePagination } from './config';
+import {
+  ICrud,
+  ICrudAdd,
+  ICrudEdit,
+  ICrudDelete,
 
-type CustomVNode = VNode & {
-  children?: SlotRenderType
+  FormRef,
+  DataFunc,
+  AnyObject,
+  CustomVNode,
+  SlotRenderType,
+  CreateCrudBtnConfig,
+
+  TableColumn,
+  TableDataRow,
+  TablePagination,
+  TableDataRowOptions,
+} from './interface';
+
+type RefreshTableOptions = {
+  resetPageNum?: boolean;
+  resetQueryParams?: boolean;
 }
-
-// 自定义VNode
-type SlotRenderType = {
-  render?() : VNode | Array<VNode>;
-  header?() : VNode | Array<VNode>;
-  default?() : VNode | Array<VNode>;
-  renderHeader?() : VNode | Array<VNode>;
-}
-
-type CreateCrudBtnConfig = {
-  label?: string;
-  injectEdit?: boolean;
-  injectDelete?: boolean;
-}
-
-type TableDataRow = {
-  [propName: string]: any;
-  _options?: {
-    loadingDelete: boolean;
-    disabledEdit: boolean;
-    disabledDelete: boolean;
-    uid: string;
-    permission: {
-      edit: boolean
-      delete: boolean
+type ExposeType = {
+  ({
+    showAddDialog,
+    refreshTable,
+  }: {
+    showAddDialog(): void;
+    refreshTable({
+      resetPageNum,
+      resetQueryParams,
     }
-  }
+    ?: RefreshTableOptions): void;
+  }): void
 }
 
-type AnyObject = {
-  [propName: string]: any
-  _options?: TableDataRow['_options']
-}
-
-type FormRef = {
-  getFormModel(): AnyObject;
-  getFormRef(): {
-    resetFields(): void;
-    clearValidate(): void;
-    validate(callback: (valid: boolean) => void): Promise<(valid: boolean) => void>
+class CrudAdd implements Partial<ICrudAdd> {
+  api = undefined;
+  formComponent = undefined;
+  successMsg = '添加成功';
+  errorMsg = null;
+  dialogProps = {
+    width: '700px',
+    title: '添加',
+    'append-to-body': true,
   };
-} & Element & ComponentPublicInstance;
-
-interface IDataFunc {
-  (queryParams: AnyObject): Promise<{
-    total: number
-    content: Array<TableDataRow>
-  }> | any
+}
+class CrudEdit implements Partial<ICrudEdit> {
+  api = undefined;
+  detailApi = undefined;
+  formComponent = undefined;
+  successMsg = '修改成功';
+  errorMsg = undefined;
+  dialogProps = {
+    width: '700px',
+    title: '修改',
+    'append-to-body': true,
+  };
+  buttonProps = {
+    type: 'default',
+    size: 'small',
+    plain: true,
+  };
+}
+class CrudDelete implements Partial<ICrudDelete> {
+  api = undefined;
+  crudSort = 30;
+  confirmText = '确定要删除吗？';
+  successMsg = '删除成功';
+  errorMsg = null;
+  buttonProps = {
+    type: 'danger',
+    size: 'small',
+    plain: true,
+  };
 }
 
 export default defineComponent({
   name: 'ztz-table',
   props: {
     columns: {
-      type: Array,
+      type: Array as PropType<Array<TableColumn>>,
       default: () => [],
     },
     data: {
-      type: [Array, Function] as PropType<Array<TableDataRow> | IDataFunc>,
+      type: [Array, Function] as PropType<Array<any> | DataFunc>,
       default: () => [],
     },
     queryParams: {
@@ -112,8 +133,8 @@ export default defineComponent({
       default: () => ({}),
     },
     crud: {
-      type: Object as PropType<TableCrud>,
-      default: () => null,
+      type: Object as PropType<ICrud>,
+      default: () => ({}),
     },
     // 是否立即执行搜索
     immediate: {
@@ -142,8 +163,12 @@ export default defineComponent({
       type: String,
       default: 'total',
     },
+    emptyText: {
+      type: String,
+      default: '暂无数据',
+    },
   },
-  setup(props, { expose }) {
+  setup(props, { expose }: { expose: ExposeType }) {
     const attrs = useAttrs();
     const slots = useSlots();
     const ins = getCurrentInstance();
@@ -152,7 +177,7 @@ export default defineComponent({
     const editFormRef = ref<FormRef|null>(null);
     const visibleAddDialogRef = ref(false);
     const visibleEditDialogRef = ref(false);
-    const currentCrudRef = ref<TableCrud|AnyObject>({});
+    const currentCrudRef = ref<ICrud|AnyObject>({});
     const columnVNodeRenderRef = ref<CustomVNode|null>(null);
 
     const loadingAddRef = ref(false);
@@ -178,11 +203,16 @@ export default defineComponent({
 
     // 表格数据赋值，一定要使用这个方法
     const setTableData = (data: Array<TableDataRow> = []) => {
-      tableDataRef.value = data.map((p: TableDataRow) => {
-        const item = { ...p };
-        item._options = Object.assign(new TableRowOptions(), (checkType(item._options, 'Object') ? item._options : {}));
-        return item;
+      data.forEach((p: TableDataRow) => {
+        const o = new TableDataRowOptions();
+        if (p._options) {
+          merge(p._options, o);
+        } else {
+          // @ts-ignore 对源数据扩展
+          p._options = o;
+        }
       });
+      tableDataRef.value = data;
     };
 
     // 创建CRUD功能按钮
@@ -250,8 +280,8 @@ export default defineComponent({
       columnVNodeList = columnVNodeList.map((columnVNode) => {
         const renderHeader = columnVNode?.children?.renderHeader ?? columnVNode?.children?.header;
         const renderDefault = columnVNode?.children?.render ?? columnVNode?.children?.default;
-        const label = getLabel(columnVNode.props);
-        const prop = getProp(columnVNode.props);
+        const label = getLabel(columnVNode.props as TableColumn);
+        const prop = getProp(columnVNode.props as TableColumn);
         const config = {
           label,
           injectEdit: getObjectValue(columnVNode.props, 'injectEdit'),
@@ -389,7 +419,12 @@ export default defineComponent({
     // CRUD配置合并
     watchEffect(() => {
       if (checkType(props.crud, 'Object')) {
-        currentCrudRef.value = merge(new TableCrud(), props.crud);
+        props.crud?.add && mergeDifference(props.crud.add, new CrudAdd());
+        props.crud?.edit && mergeDifference(props.crud.edit, new CrudEdit());
+        props.crud?.delete && mergeDifference(props.crud.delete, new CrudDelete());
+        currentCrudRef.value = props.crud;
+      } else {
+        currentCrudRef.value = {};
       }
     });
 
@@ -494,10 +529,6 @@ export default defineComponent({
      * @param options.resetPageNum { boolean= } 重置分页到初始值
      * @param options.resetQueryParams { boolean= } 重置搜索条件到初始值
      */
-    type RefreshTableOptions = {
-      resetPageNum?: boolean;
-      resetQueryParams?: boolean;
-    }
     const refreshTable = (options: RefreshTableOptions = { resetPageNum: false, resetQueryParams: false }) => {
       if (options?.resetPageNum) {
         paginationRef.value.pageNum = paginationBackupRef.value.pageNum ?? 1;
@@ -603,6 +634,7 @@ export default defineComponent({
             {/* @ts-ignore 忽略 Type 'Element' is not assignable to type 'ReactNode'. 错误 */}
             <ElTable
               {...attrs}
+              emptyText={props.emptyText}
               data={tableDataRef.value}
               style={{ width: '100%' }}
             >
